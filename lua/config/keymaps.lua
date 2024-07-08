@@ -1,4 +1,4 @@
-local neogit = require('neogit')
+-- local neogit = require('neogit')
 
 vim.keymap.set(
     'n',
@@ -22,12 +22,12 @@ vim.keymap.set(
     '<ESC>:wincmd w<CR>',
     { desc = 'editor: Focus' }
 )
-vim.keymap.set(
-    'n',
-    '<A-f><A-g>',
-    function() neogit.open({}) end,
-    { desc = 'Neogit: open' }
-)
+-- vim.keymap.set(
+--     'n',
+--     '<A-f><A-g>',
+--     function() neogit.open({}) end,
+--     { desc = 'Neogit: open' }
+-- )
 vim.keymap.set(
     'n',
     '<A-f><A-t>',
@@ -57,13 +57,13 @@ vim.keymap.set(
 )
 
 -- git
-vim.keymap.set('n', '<A-g><A-p>', function()
-    neogit.open({ 'log' })
-    vim.api.nvim_input('l')
-end, { desc = 'Neogit: log_view' })
-
--- hover
-vim.keymap.set('n', '<A-v>', function()
-    vim.lsp.buf.hover()
-end, { desc = 'Neogit: log_view' })
-
+-- vim.keymap.set('n', '<A-g><A-p>', function()
+--     neogit.open({ 'log' })
+--     vim.api.nvim_input('l')
+-- end, { desc = 'Neogit: log_view' })
+--
+-- -- hover
+-- vim.keymap.set('n', '<A-v>', function()
+--     vim.lsp.buf.hover()
+-- end, { desc = 'Neogit: log_view' })
+--

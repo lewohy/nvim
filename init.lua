@@ -11,15 +11,21 @@ if vim.g.vscode == nil then
     require('plugins.lualine')
     require('plugins.nvim-scrollbar')
     require('plugins.gitsigns')
-    require('plugins.firenvim')
     require('plugins.telescope')
     require('plugins.nvim-notify')
     require('plugins.virt-column')
     require('plugins.todo-comments')
     require('plugins.nvim-cursor')
+    -- require('plugins.neogit')
+    -- require('plugins.telescope')
 else
     require('plugins.vscode-neovim')
 end
+
+if vim.g.started_by_firenvim == true then
+    require('plugins.firenvim')
+end
+
 require('plugins.vim-smoothie')
 require('plugins.vim-sandwich')
 require('plugins.Comment')

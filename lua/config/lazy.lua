@@ -57,11 +57,11 @@ require('lazy').setup({
         'stevearc/conform.nvim',
         opts = {},
     },
-    {
+    vim.g.started_by_firenvim == true and {
         'glacambre/firenvim',
-        lazy = not vim.g.started_by_firenvim,
+        lazy = false,
         build = function() vim.fn['firenvim#install'](0) end,
-    },
+    } or nil,
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.5',
@@ -107,7 +107,7 @@ require('lazy').setup({
     {
         'phanviet/nvim-cursor'
     },
-    {
+    vim.g.vscode == nil and {
         'github/copilot.vim'
-    }
+    } or nil
 })
