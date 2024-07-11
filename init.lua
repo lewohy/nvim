@@ -1,5 +1,4 @@
 require('config.functions')
--- require('config.lazy')
 require('config.options')
 
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
@@ -28,6 +27,18 @@ function LoadPlugins()
 
     table.insert(plugins, require('plugins.catppuccin'))
     table.insert(plugins, require('plugins.Comment'))
+    table.insert(plugins, require('plugins.lualine'))
+    table.insert(plugins, require('plugins.vim-sandwich'))
+    table.insert(plugins, require('plugins.cinnamon'))
+
+    if vim.g.vscode == nil then
+        table.insert(plugins, require('plugins.virt-column'))
+    else
+
+    end
+    if vim.g.started_by_firenvim == true then
+        table.insert(plugins, require('plugins.firevim'))
+    end
 
     require('lazy').setup(
         map(function(plugin)
