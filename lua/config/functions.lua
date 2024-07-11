@@ -15,7 +15,6 @@ function OpenRegister()
         row = 10,
         col = 10,
         border = 'single',
-
     })
 end
 
