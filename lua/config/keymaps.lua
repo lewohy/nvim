@@ -1,12 +1,3 @@
--- local neogit = require('neogit')
-
-vim.keymap.set(
-    'n',
-    '<A-w><A-f>',
-    '<ESC>:NvimTreeToggle<CR>',
-    { desc = 'nvim-tree: Toggle' }
-)
-
 vim.keymap.set('n', '"', '<ESC>:reg<CR>"')
 
 -- focus
@@ -37,13 +28,6 @@ vim.keymap.set(
 
 vim.keymap.set(
     'n',
-    '<A-e>',
-    '<ESC>:Telescope oldfiles<CR>',
-    { desc = 'Telescope: oldfiles' }
-)
-
-vim.keymap.set(
-    'n',
     'j',
     'gj',
     { desc = 'j: gj' }
@@ -67,3 +51,22 @@ vim.keymap.set(
 --     vim.lsp.buf.hover()
 -- end, { desc = 'Neogit: log_view' })
 --
+
+local builtin = require('telescope.builtin')
+
+vim.keymap.set(
+    'n',
+    '<A-e>',
+    builtin.buffers
+)
+
+local hop = require('hop')
+local directions = require('hop.hint').HintDirection
+
+vim.keymap.set('n', '<leader><leader>e', function()
+    hop.hint_words({
+        direction = directions.AFTER_CURSOR
+    })
+end, {
+    remap = true
+})
