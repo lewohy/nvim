@@ -1,7 +1,17 @@
 local telescope_builtin = require('telescope.builtin')
 local neogit = require('neogit')
+local hop = require('hop')
+local directions = require('hop.hint').HintDirection
 
--- vim.keymap.set('n', '"', '<ESC>:reg<CR>"')
+vim.keymap.set({
+    'n',
+    'i'
+}, '<C-k><C-m>', function()
+    telescope_builtin.filetypes()
+end, {
+    desc = 'Open telescope filetypes'
+});
+
 
 vim.keymap.set({
     'n',
@@ -11,7 +21,7 @@ vim.keymap.set({
     if (reveal_file == '') then
         reveal_file = vim.fn.getcwd()
     else
-        local f = io.open(reveal_file, "r")
+        local f = io.open(reveal_file, 'r')
         if (f) then
             f.close(f)
         else
@@ -23,7 +33,7 @@ vim.keymap.set({
         reveal_force_cwd = true,
     })
 end, {
-    desc = "Open neo-tree at current file or working directory"
+    desc = 'Open neo-tree at current file or working directory'
 });
 
 vim.keymap.set(
@@ -35,18 +45,38 @@ vim.keymap.set(
     }
 )
 
-vim.keymap.set(
-    'n',
-    '<A-f><A-g>',
-    function()
-        neogit.open({
-            kind = 'vsplit_left'
-        })
-    end,
-    {
-        desc = 'Focus: Neogit'
-    }
-)
+vim.keymap.set('n', '<A-f><A-g>', function()
+    neogit.open({
+        kind = 'vsplit_left'
+    })
+end, {
+    desc = 'Focus: Neogit'
+})
+
+vim.keymap.set('n', '<A-f><A-i>', function()
+    vim.cmd('TodoLocList')
+end, {
+    desc = 'todo: Focus'
+})
+
+vim.keymap.set('n', '<A-f><A-t>', function()
+    local toggleterm_terminal = require('toggleterm.terminal')
+    local terminal = toggleterm_terminal.Terminal:new({
+        cmd = 'pwsh',
+        direction = 'horizontal',
+        on_open = function(term)
+            vim.cmd('startinsert!')
+            vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
+        end,
+        on_close = function(term)
+            vim.cmd('startinsert!')
+        end,
+    })
+
+    terminal:toggle()
+end, {
+    remap = true
+})
 
 vim.keymap.set(
     {
@@ -65,21 +95,6 @@ vim.keymap.set(
     }
 )
 
-vim.keymap.set(
-    'n',
-    '<A-f><A-t>',
-    '<ESC>:TodoLocList<CR>',
-    { desc = 'todo: Focus' }
-)
-
--- git
--- vim.keymap.set('n', '<A-g><A-p>', function()
---     neogit.open({ 'log' })
---     vim.api.nvim_input('l')
--- end, { desc = 'Neogit: log_view' })
---
---
--- hover
 vim.keymap.set('n', '<A-v>', function()
     vim.lsp.buf.hover()
 end, {
@@ -91,9 +106,6 @@ vim.keymap.set(
     '<A-e>',
     telescope_builtin.buffers
 )
-
-local hop = require('hop')
-local directions = require('hop.hint').HintDirection
 
 vim.keymap.set('n', '<leader><leader>e', function()
     hop.hint_words({
@@ -107,6 +119,12 @@ vim.keymap.set('n', '<leader><leader>b', function()
     hop.hint_words({
         direction = directions.BEFORE_CURSOR
     })
+end, {
+    remap = true
+})
+
+vim.keymap.set('n', '<leader><leader>t', function()
+    vim.notify('asd')
 end, {
     remap = true
 })

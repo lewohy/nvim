@@ -46,33 +46,43 @@ require('lazy').setup({
         end
     },
     {
-        'rcarriga/nvim-notify',
-        opts = {
-            fps = 60,
-            icons = {
-                DEBUG = '',
-                ERROR = '',
-                INFO = '',
-                TRACE = '✎',
-                WARN = '',
+        'MunifTanjim/nui.nvim',
+        {
+            'rcarriga/nvim-notify',
+            opts = {
+                fps = 60,
+                icons = {
+                    DEBUG = '',
+                    ERROR = '',
+                    INFO = '',
+                    TRACE = '✎',
+                    WARN = '',
+                },
+                level = 2,
+                minimum_width = 20,
+                render = 'wrapped-compact',
+                stages = 'fade_in_slide_out',
+                time_formats = {
+                    notification = '%T',
+                    notification_history = '%FT%T',
+                },
+                timeout = 5000,
+                top_down = false,
             },
-            level = 2,
-            minimum_width = 20,
-            render = 'wrapped-compact',
-            stages = 'fade_in_slide_out',
-            time_formats = {
-                notification = '%T',
-                notification_history = '%FT%T',
-            },
-            timeout = 5000,
-            top_down = false,
         },
-        config = function(_, opts)
-            local notify = require('notify')
-            notify.setup(opts)
-
-            vim.notify = notify
-        end
+    },
+    {
+        'folke/noice.nvim',
+        event = 'VeryLazy',
+        opts = {
+            notify = {
+                view = 'notify'
+            }
+        },
+        dependencies = {
+            'MunifTanjim/nui.nvim',
+            'rcarriga/nvim-notify',
+        },
     },
     {
         'numToStr/Comment.nvim',
@@ -449,7 +459,9 @@ require('lazy').setup({
     {
         'nvim-telescope/telescope.nvim',
         branch = '0.1.x',
-        dependencies = { 'nvim-lua/plenary.nvim' },
+        dependencies = {
+            'nvim-lua/plenary.nvim'
+        },
         opts = {
             pickers = {
                 buffers = {
@@ -585,6 +597,7 @@ require('lazy').setup({
                 end,
             }
         end,
+        cond = vim.g.vscode == nil,
     },
     {
         'akinsho/bufferline.nvim',
@@ -604,7 +617,35 @@ require('lazy').setup({
         end
     },
     {
-        "keaising/im-select.nvim",
+        'keaising/im-select.nvim',
         opts = {},
     },
+    {
+        'tversteeg/registers.nvim',
+        cmd = 'Registers',
+        opts = {
+            window = {
+                max_width = 100,
+                highlight_cursorline = true,
+                border = 'rounded',
+            },
+        },
+        config = true,
+        keys = {
+            {
+                '\'',
+                mode = { 'n', 'v' }
+            },
+            {
+                '<C-R>',
+                mode = 'i'
+            }
+        },
+        name = 'registers',
+    },
+    {
+        'akinsho/toggleterm.nvim',
+        version = '*',
+        config = true
+    }
 })
