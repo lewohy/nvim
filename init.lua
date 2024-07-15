@@ -8,7 +8,14 @@ if vim.g.vscode then
     vim.notify = vscode.notify
 end
 
+if vim.g.neovide then
+    require('config.neovide')
+end
+
 vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = 'rounded',
 })
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = nil })
+vim.api.nvim_set_hl(0, 'NormalFloat', {
+    bg = nil
+})
+

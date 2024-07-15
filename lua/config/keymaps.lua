@@ -1,43 +1,75 @@
-vim.keymap.set('n', '"', '<ESC>:reg<CR>"')
+local telescope_builtin = require('telescope.builtin')
+local neogit = require('neogit')
 
--- focus
-vim.keymap.set(
+-- vim.keymap.set('n', '"', '<ESC>:reg<CR>"')
+
+vim.keymap.set({
     'n',
-    '<A-f><A-f>',
-    '<ESC>:NvimTreeFocus<CR>',
-    { desc = 'nvim-tree: Focus' }
-)
+    'i'
+}, '<A-f><A-f>', function()
+    local reveal_file = vim.fn.expand('%:p')
+    if (reveal_file == '') then
+        reveal_file = vim.fn.getcwd()
+    else
+        local f = io.open(reveal_file, "r")
+        if (f) then
+            f.close(f)
+        else
+            reveal_file = vim.fn.getcwd()
+        end
+    end
+    require('neo-tree.command').execute({
+        reveal_file = reveal_file,
+        reveal_force_cwd = true,
+    })
+end, {
+    desc = "Open neo-tree at current file or working directory"
+});
+
 vim.keymap.set(
     'n',
     '<A-f><A-e>',
     '<ESC>:wincmd w<CR>',
-    { desc = 'editor: Focus' }
+    {
+        desc = 'Focus: Editor'
+    }
 )
--- vim.keymap.set(
---     'n',
---     '<A-f><A-g>',
---     function() neogit.open({}) end,
---     { desc = 'Neogit: open' }
--- )
+
+vim.keymap.set(
+    'n',
+    '<A-f><A-g>',
+    function()
+        neogit.open({
+            kind = 'vsplit_left'
+        })
+    end,
+    {
+        desc = 'Focus: Neogit'
+    }
+)
+
+vim.keymap.set(
+    {
+        'n',
+        'i'
+    },
+    '<A-g><A-g>',
+    function()
+        neogit.open({
+            'log',
+            kind = 'tab'
+        })
+    end,
+    {
+        desc = 'Git: Log'
+    }
+)
+
 vim.keymap.set(
     'n',
     '<A-f><A-t>',
     '<ESC>:TodoLocList<CR>',
     { desc = 'todo: Focus' }
-)
-
-vim.keymap.set(
-    'n',
-    'j',
-    'gj',
-    { desc = 'j: gj' }
-)
-
-vim.keymap.set(
-    'n',
-    'k',
-    'gk',
-    { desc = 'k: gk' }
 )
 
 -- git
@@ -46,18 +78,18 @@ vim.keymap.set(
 --     vim.api.nvim_input('l')
 -- end, { desc = 'Neogit: log_view' })
 --
--- -- hover
--- vim.keymap.set('n', '<A-v>', function()
---     vim.lsp.buf.hover()
--- end, { desc = 'Neogit: log_view' })
 --
-
-local builtin = require('telescope.builtin')
+-- hover
+vim.keymap.set('n', '<A-v>', function()
+    vim.lsp.buf.hover()
+end, {
+    desc = 'Neogit: log_view'
+})
 
 vim.keymap.set(
     'n',
     '<A-e>',
-    builtin.buffers
+    telescope_builtin.buffers
 )
 
 local hop = require('hop')
@@ -66,6 +98,14 @@ local directions = require('hop.hint').HintDirection
 vim.keymap.set('n', '<leader><leader>e', function()
     hop.hint_words({
         direction = directions.AFTER_CURSOR
+    })
+end, {
+    remap = true
+})
+
+vim.keymap.set('n', '<leader><leader>b', function()
+    hop.hint_words({
+        direction = directions.BEFORE_CURSOR
     })
 end, {
     remap = true

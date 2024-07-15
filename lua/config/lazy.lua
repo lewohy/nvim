@@ -13,9 +13,41 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
     {
+        'catppuccin/nvim',
+        name = 'catppuccin',
+        priority = 1000,
+        opts = {
+            flavour = 'mocha', -- latte, frappe, macchiato, mocha
+            background = {     -- :h background
+                light = 'mocha',
+                dark = 'mocha',
+            },
+        },
+        config = function(_, opts)
+            local catppuccin = require('catppuccin')
+            catppuccin.setup(opts)
+
+            vim.cmd.colorscheme('catppuccin-mocha')
+
+            local palettes = require('catppuccin.palettes').get_palette('mocha')
+
+            vim.api.nvim_set_hl(0, 'LineNrAbove', {
+                fg = palettes.overlay2,
+                bold = true
+            })
+            vim.api.nvim_set_hl(0, 'LineNr', {
+                fg = palettes.overlay1,
+                bold = true
+            })
+            vim.api.nvim_set_hl(0, 'LineNrBelow', {
+                fg = '#FB508F',
+                bold = true
+            })
+        end
+    },
+    {
         'rcarriga/nvim-notify',
         opts = {
-            -- background_colour = nil,
             fps = 60,
             icons = {
                 DEBUG = '',
@@ -35,31 +67,11 @@ require('lazy').setup({
             timeout = 5000,
             top_down = false,
         },
-        init = function()
-            vim.notify = require('notify')
-        end,
-    },
-    {
-        'catppuccin/nvim',
-        name = 'catppuccin',
-        priority = 1000,
-        opts = {
-            flavour = 'mocha', -- latte, frappe, macchiato, mocha
-            background = {     -- :h background
-                light = 'mocha',
-                dark = 'mocha',
-            },
-        },
+        config = function(_, opts)
+            local notify = require('notify')
+            notify.setup(opts)
 
-        init = function()
-            -- setup must be called before loading
-            vim.cmd.colorscheme('catppuccin-mocha')
-
-            local palettes = require('catppuccin.palettes').get_palette('mocha')
-
-            vim.api.nvim_set_hl(0, 'LineNrAbove', { fg = palettes.overlay2, bold = true })
-            vim.api.nvim_set_hl(0, 'LineNr', { fg = palettes.overlay1, bold = true })
-            vim.api.nvim_set_hl(0, 'LineNrBelow', { fg = '#FB508F', bold = true })
+            vim.notify = notify
         end
     },
     {
@@ -71,7 +83,7 @@ require('lazy').setup({
             sticky = true,
             ---Lines to be ignored while (un)comment
             ignore = nil,
-            ---LHS of toggle mappings in NORMAL mode
+            ---LkHS of toggle mappings in NORMAL mode
             toggler = {
                 ---Line-comment toggle keymap
                 line = 'gcc',
@@ -107,29 +119,28 @@ require('lazy').setup({
             ---Function to call after (un)comment
             post_hook = nil,
         },
+        config = function(_, opts)
+            local comment = require('Comment')
+            comment.setup(opts)
 
+            local ft = require('Comment.ft')
+            ft
+                .set('json', {
+                    '//%s',
+                    '/*%s*/',
+                })
+                .set('yaml', '#%s')
+        end,
         lazy = false,
     },
     {
         'glacambre/firenvim',
         lazy = false,
-        build = function() vim.fn['firenvim#install'](0) end,
-        config = function()
-
+        cond = vim.g.started_by_firenvim == true,
+        build = function()
+            vim.fn['firenvim#install'](0)
         end,
         init = function()
-            local id = vim.api.nvim_create_augroup('ExpandLinesOnTextChanged', { clear = true })
-            local max_height = 20
-            local height_offset = 4
-            local resize_window = function(event)
-                local height = vim.api.nvim_win_text_height(0, {}).all + height_offset
-
-                if height > vim.o.lines and height < max_height then
-                    vim.o.lines = height
-                    vim.cmd('norm! zb')
-                end
-            end
-
             vim.g.firenvim_config = {
                 globalSettings = { alt = 'all' },
                 localSettings = {
@@ -142,6 +153,22 @@ require('lazy').setup({
                     },
                 },
             }
+        end,
+        config = function(_, opts)
+            local firenvim = require('firenvim')
+            firenvim.setup(opts)
+
+            local id = vim.api.nvim_create_augroup('ExpandLinesOnTextChanged', { clear = true })
+            local max_height = 20
+            local height_offset = 4
+            local resize_window = function(event)
+                local height = vim.api.nvim_win_text_height(0, {}).all + height_offset
+
+                if height > vim.o.lines and height < max_height then
+                    vim.o.lines = height
+                    vim.cmd('norm! zb')
+                end
+            end
 
             vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
                 group = id,
@@ -172,17 +199,16 @@ require('lazy').setup({
                 end
             })
         end
-
     },
     {
         'nvim-lualine/lualine.nvim',
         dependencies = { 'nvim-tree/nvim-web-devicons' },
-        config = function()
-            local function is_nvim_tree() return vim.bo.filetype == 'NvimTree' end
+        opts = function()
+            local function is_neo_tree() return vim.bo.filetype == 'neo-tree' end
             local function is_todo() return vim.bo.filetype == 'qf' end
             local function is_firenvim() return vim.g.started_by_firenvim end
 
-            require('lualine').setup({
+            return {
                 options = {
                     icons_enabled = true,
                     theme = 'catppuccin',
@@ -206,7 +232,7 @@ require('lazy').setup({
                         {
                             'mode',
                             cond = function()
-                                return (not is_nvim_tree()) and (not is_todo())
+                                return (not is_neo_tree()) and (not is_todo())
                             end,
                         },
                     },
@@ -214,19 +240,19 @@ require('lazy').setup({
                         {
                             'branch',
                             cond = function()
-                                return (not is_nvim_tree()) and (not is_todo())
+                                return (not is_todo())
                             end,
                         },
                         {
                             'diff',
                             cond = function()
-                                return (not is_nvim_tree()) and (not is_todo())
+                                return (not is_neo_tree()) and (not is_todo())
                             end,
                         },
                         {
                             'diagnostics',
                             cond = function()
-                                return (not is_nvim_tree()) and (not is_todo())
+                                return (not is_neo_tree()) and (not is_todo())
                             end,
                         },
                     },
@@ -234,7 +260,7 @@ require('lazy').setup({
                         {
                             'filename',
                             cond = function()
-                                return (not is_nvim_tree())
+                                return (not is_neo_tree())
                                     and (not is_firenvim())
                                     and (not is_todo())
                             end,
@@ -245,19 +271,19 @@ require('lazy').setup({
                         {
                             'encoding',
                             cond = function()
-                                return (not is_nvim_tree()) and (not is_todo())
+                                return (not is_neo_tree()) and (not is_todo())
                             end,
                         },
                         {
                             'fileformat',
                             cond = function()
-                                return (not is_nvim_tree()) and (not is_todo())
+                                return (not is_neo_tree()) and (not is_todo())
                             end,
                         },
                         {
                             'filetype',
                             cond = function()
-                                return (not is_nvim_tree()) and (not is_todo())
+                                return (not is_neo_tree()) and (not is_todo())
                             end,
                         },
                     },
@@ -265,7 +291,7 @@ require('lazy').setup({
                         {
                             'location',
                             cond = function()
-                                return (not is_nvim_tree()) and (not is_todo())
+                                return (not is_neo_tree()) and (not is_todo())
                             end,
                         },
                     },
@@ -279,7 +305,7 @@ require('lazy').setup({
                     lualine_z = {},
                 },
                 extensions = {},
-            })
+            }
         end
     },
     {
@@ -305,12 +331,10 @@ require('lazy').setup({
     },
     {
         'lukas-reineke/virt-column.nvim',
-        config = function()
-            require('virt-column').setup({
-                char = '▕',
-                virtcolumn = '80,120',
-            })
-        end
+        opts = {
+            char = '▕',
+            virtcolumn = '80,120',
+        }
     },
     {
         'karb94/neoscroll.nvim',
@@ -405,25 +429,21 @@ require('lazy').setup({
                 -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
             },
         },
-
     },
     {
         'NeogitOrg/neogit',
         dependencies = {
-            'nvim-lua/plenary.nvim',  -- required
-            'sindrets/diffview.nvim', -- optional - Diff integration
-
-            -- Only one of these is needed, not both.
-            'nvim-telescope/telescope.nvim', -- optional
-            'ibhagwan/fzf-lua',              -- optional
+            'nvim-lua/plenary.nvim',
+            'sindrets/diffview.nvim',
+            'nvim-telescope/telescope.nvim',
+            'ibhagwan/fzf-lua',
         },
-
+        opt = {},
+        config = true
     },
     {
         'petertriho/nvim-scrollbar',
-        opts = {
-
-        },
+        opts = {},
         cond = vim.g.vscode == nil,
     },
     {
@@ -442,7 +462,7 @@ require('lazy').setup({
                     theme = 'dropdown',
                 },
             },
-        },
+        }
     },
     {
         'lewis6991/gitsigns.nvim',
@@ -456,6 +476,7 @@ require('lazy').setup({
                 untracked = { text = '┆' },
             },
         },
+        cond = vim.g.vscode == nil,
 
     },
     {
@@ -469,40 +490,6 @@ require('lazy').setup({
         cond = vim.g.vscode == nil,
     },
     {
-        'akinsho/bufferline.nvim',
-        version = '*',
-        dependencies = 'nvim-tree/nvim-web-devicons',
-        config = function()
-            local mocha = require('catppuccin.palettes').get_palette('mocha')
-            local hightlights = require('catppuccin.groups.integrations.bufferline').get({
-                styles = {
-                    'italic',
-                    'bold'
-                },
-                custom = {
-                    all = {
-                        fill = {
-                            -- bg = '#0000ff'
-                        },
-                    },
-                    mocha = {
-                        background = { fg = mocha.text },
-                    },
-                    latte = {
-                        background = { fg = '#000000' },
-                    },
-                },
-            })
-
-            require('bufferline').setup({
-                highlights = hightlights,
-                options = {
-                    separator_style = 'slant'
-                }
-            })
-        end
-    },
-    {
         'smoka7/hop.nvim',
         version = '*',
         opts = {
@@ -513,30 +500,111 @@ require('lazy').setup({
             multi_windows = true,
         },
     },
-    -- {
-    --     'williamboman/mason.nvim',
-    --     opts = {
-    --         ui = {
-    --             icons = {
-    --                 package_installed = '✓',
-    --                 package_pending = '➜',
-    --                 package_uninstalled = '✗'
-    --             }
-    --         }
-    --     },
-    --
-    -- },
-    -- {
-    --     'williamboman/mason-lspconfig.nvim',
-    --     opts = {},
-    --
-    -- },
-    -- {
-    --     'neovim/nvim-lspconfig',
-    --     config = function()
-    --         local lspconfig = require('lspconfig')
-    --
-    --         lspconfig.clangd.setup({})
-    --     end
-    -- },
+    {
+        'nvim-neo-tree/neo-tree.nvim',
+        branch = 'v3.x',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+            'MunifTanjim/nui.nvim',
+            '3rd/image.nvim',              -- Optional image support in preview window: See `# Preview Mode` for more information
+        },
+        opts = {
+            default_component_configs = {
+                indent = {
+                    indent_size = 2,
+                    padding = 1, -- extra padding on left hand side
+                    -- indent guides
+                    with_markers = true,
+                    indent_marker = '│',
+                    last_indent_marker = '└',
+                },
+                icon = {
+                    folder_closed = '󰉋',
+                    folder_open = '󰝰',
+                    folder_empty = '󰷏',
+                },
+                modified = {
+                    symbol = '',
+                },
+                git_status = {
+                    symbols = {
+                        -- Change type
+                        added     = '󰐕',
+                        modified  = '',
+                        deleted   = '󰗨',
+                        renamed   = '󰑕',
+                        -- Status type
+                        untracked = '',
+                        ignored   = '',
+                        unstaged  = '󰄱',
+                        staged    = '',
+                        conflict  = '',
+                    }
+                },
+            },
+            filesystem = {
+                filtered_items = {
+                    visible = true, -- when true, they will just be displayed differently than normal items
+                    hide_dotfiles = true,
+                    hide_gitignored = true,
+                    hide_hidden = true, -- only works on Windows for hidden files/directories
+                    hide_by_name = {
+                        'node_modules'
+                    },
+                },
+            }
+        },
+        window = {
+            position = 'left',
+            width = 40,
+        }
+    },
+    {
+        'williamboman/mason.nvim',
+        opts = {
+            ui = {
+                icons = {
+                    package_installed = '✓',
+                    package_pending = '➜',
+                    package_uninstalled = '✗'
+                }
+            }
+        },
+    },
+    {
+        'williamboman/mason-lspconfig.nvim',
+        opts = {},
+    },
+    {
+        'neovim/nvim-lspconfig',
+        config = function()
+            require('mason-lspconfig').setup_handlers {
+                function(server_name)
+                    require('lspconfig')[server_name].setup({})
+                end,
+            }
+        end,
+    },
+    {
+        'akinsho/bufferline.nvim',
+        version = '*',
+        dependencies = 'nvim-tree/nvim-web-devicons',
+        opts = function()
+            local mocha = require('catppuccin.palettes').get_palette('mocha')
+            local hightlights = require('catppuccin.groups.integrations.bufferline').get({
+            })
+
+            return {
+                highlights = hightlights,
+                options = {
+                    separator_style = 'slant',
+                }
+            }
+        end
+    },
+    {
+        "keaising/im-select.nvim",
+        opts = {},
+    },
 })

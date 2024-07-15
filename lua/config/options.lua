@@ -74,3 +74,4 @@ vim.opt.termguicolors = true
 if vim.g.vscode then vim.opt.shada = '' end
 
 vim.opt.background = 'dark'
+
