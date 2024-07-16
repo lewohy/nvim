@@ -168,9 +168,6 @@ require('lazy').setup({
         end,
         opts = {},
         config = function(_, opts)
-            -- local firenvim = require('firenvim')
-            -- firenvim.setup(opts)
-            --
             local id = vim.api.nvim_create_augroup('ExpandLinesOnTextChanged', { clear = true })
             local max_height = 20
             local height_offset = 4
@@ -340,14 +337,14 @@ require('lazy').setup({
                 change_line = 'cS',
             },
         },
-
     },
     {
         'lukas-reineke/virt-column.nvim',
         opts = {
             char = '▕',
             virtcolumn = '80,120',
-        }
+        },
+        cond = vim.g.vscode == nil,
     },
     {
         'karb94/neoscroll.nvim',
@@ -442,6 +439,7 @@ require('lazy').setup({
                 -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
             },
         },
+        cond = vim.g.vscode == nil,
     },
     {
         'NeogitOrg/neogit',
@@ -452,7 +450,8 @@ require('lazy').setup({
             'ibhagwan/fzf-lua',
         },
         opt = {},
-        config = true
+        config = true,
+        cond = vim.g.vscode == nil,
     },
     {
         'petertriho/nvim-scrollbar',
@@ -477,7 +476,8 @@ require('lazy').setup({
                     theme = 'dropdown',
                 },
             },
-        }
+        },
+        cond = vim.g.vscode == nil,
     },
     {
         'lewis6991/gitsigns.nvim',
@@ -520,16 +520,15 @@ require('lazy').setup({
         branch = 'v3.x',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+            'nvim-tree/nvim-web-devicons',
             'MunifTanjim/nui.nvim',
-            '3rd/image.nvim',              -- Optional image support in preview window: See `# Preview Mode` for more information
+            '3rd/image.nvim', -- Optional image support in preview window: See `# Preview Mode` for more information
         },
         opts = {
             default_component_configs = {
                 indent = {
                     indent_size = 2,
-                    padding = 1, -- extra padding on left hand side
-                    -- indent guides
+                    padding = 1,
                     with_markers = true,
                     indent_marker = '│',
                     last_indent_marker = '└',
@@ -544,12 +543,10 @@ require('lazy').setup({
                 },
                 git_status = {
                     symbols = {
-                        -- Change type
                         added     = '󰐕',
                         modified  = '',
                         deleted   = '󰗨',
                         renamed   = '󰑕',
-                        -- Status type
                         untracked = '',
                         ignored   = '',
                         unstaged  = '󰄱',
@@ -573,7 +570,8 @@ require('lazy').setup({
         window = {
             position = 'left',
             width = 40,
-        }
+        },
+        cond = vim.g.vscode == nil,
     },
     {
         'williamboman/mason.nvim',
@@ -607,16 +605,16 @@ require('lazy').setup({
         version = '*',
         dependencies = 'nvim-tree/nvim-web-devicons',
         opts = function()
-            local hightlights = require('catppuccin.groups.integrations.bufferline').get({
-            })
-
+            local hightlights = require('catppuccin.groups.integrations.bufferline').get({})
+            
             return {
                 highlights = hightlights,
                 options = {
                     separator_style = 'slant',
                 }
             }
-        end
+        end,
+        cond = vim.g.vscode == nil,
     },
     {
         'keaising/im-select.nvim',
@@ -635,7 +633,7 @@ require('lazy').setup({
         config = true,
         keys = {
             {
-                '\'',
+                '\"',
                 mode = { 'n', 'v' }
             },
             {
@@ -644,10 +642,12 @@ require('lazy').setup({
             }
         },
         name = 'registers',
+        cond = vim.g.vscode == nil,
     },
     {
         'akinsho/toggleterm.nvim',
         version = '*',
-        config = true
+        config = true,
+        cond = vim.g.vscode == nil,
     }
 })
