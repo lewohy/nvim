@@ -163,11 +163,14 @@ require('lazy').setup({
                     },
                 },
             }
-        end,
-        config = function(_, opts)
-            local firenvim = require('firenvim')
-            firenvim.setup(opts)
 
+            vim.opt.guifont = { 'JetBrainsMono Nerd Font', ':h14' }
+        end,
+        opts = {},
+        config = function(_, opts)
+            -- local firenvim = require('firenvim')
+            -- firenvim.setup(opts)
+            --
             local id = vim.api.nvim_create_augroup('ExpandLinesOnTextChanged', { clear = true })
             local max_height = 20
             local height_offset = 4
@@ -604,7 +607,6 @@ require('lazy').setup({
         version = '*',
         dependencies = 'nvim-tree/nvim-web-devicons',
         opts = function()
-            local mocha = require('catppuccin.palettes').get_palette('mocha')
             local hightlights = require('catppuccin.groups.integrations.bufferline').get({
             })
 

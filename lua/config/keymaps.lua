@@ -33,17 +33,14 @@ vim.keymap.set({
         reveal_force_cwd = true,
     })
 end, {
-    desc = 'Open neo-tree at current file or working directory'
+    desc = 'Focus: neo-tree'
 });
 
-vim.keymap.set(
-    'n',
-    '<A-f><A-e>',
-    '<ESC>:wincmd w<CR>',
-    {
-        desc = 'Focus: Editor'
-    }
-)
+vim.keymap.set('n', '<A-f><A-e>', function()
+
+end, {
+    desc = 'Focus: Editor'
+})
 
 vim.keymap.set('n', '<A-f><A-g>', function()
     neogit.open({
@@ -56,7 +53,7 @@ end, {
 vim.keymap.set('n', '<A-f><A-i>', function()
     vim.cmd('TodoLocList')
 end, {
-    desc = 'todo: Focus'
+    desc = 'Focus: todo'
 })
 
 vim.keymap.set('n', '<A-f><A-t>', function()
@@ -124,7 +121,18 @@ end, {
 })
 
 vim.keymap.set('n', '<leader><leader>t', function()
-    vim.notify('asd')
+    vim.notify('Test')
+
+    -- 현재 열려있는 모든 윈도우의 ID를 가져옴
+    local window_list = vim.api.nvim_list_wins()
+
+    -- 각 윈도우의 버퍼 번호를 가져오고, 출력함
+    for _, win in ipairs(window_list) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        print("Window ID: " .. win .. " Buffer ID: " .. buf)
+    end
 end, {
     remap = true
 })
+
+vim.keymap.set('v', 'J', 'j', { noremap = true, silent = true })
