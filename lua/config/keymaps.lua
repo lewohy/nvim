@@ -1,37 +1,37 @@
-local telescope_builtin = require('telescope.builtin')
-local neogit = require('neogit')
-local hop = require('hop')
-local directions = require('hop.hint').HintDirection
+local telescope_builtin_status, telescope_builtin = pcall(require, 'telescope.builtin')
+local neogit_status, neogit = pcall(require, 'neogit')
+local hop_status, hop = pcall(require, 'hop')
+local neotree_command_status, neotree_command = pcall(require, 'neo-tree.command')
+local hop_hint_status, hop_hint = pcall(require, 'hop.hint')
+local toggleterm_terminal_status, toggleterm_terminal = pcall(require, 'toggleterm.terminal')
 
-vim.keymap.set({
-    'n',
-    'i'
-}, '<C-k><C-m>', function()
-    telescope_builtin.filetypes()
+vim.keymap.set({ 'n', 'i' }, '<C-k><C-m>', function()
+    if telescope_builtin_status then
+        telescope_builtin.filetypes()
+    end
 end, {
     desc = 'Open telescope filetypes'
 });
 
 
-vim.keymap.set({
-    'n',
-    'i'
-}, '<A-f><A-f>', function()
-    local reveal_file = vim.fn.expand('%:p')
-    if (reveal_file == '') then
-        reveal_file = vim.fn.getcwd()
-    else
-        local f = io.open(reveal_file, 'r')
-        if (f) then
-            f.close(f)
-        else
+vim.keymap.set({ 'n', 'i' }, '<A-f><A-f>', function()
+    if neotree_command_status then
+        local reveal_file = vim.fn.expand('%:p')
+        if (reveal_file == '') then
             reveal_file = vim.fn.getcwd()
+        else
+            local f = io.open(reveal_file, 'r')
+            if (f) then
+                f.close(f)
+            else
+                reveal_file = vim.fn.getcwd()
+            end
         end
+        neotree_command.execute({
+            reveal_file = reveal_file,
+            reveal_force_cwd = true,
+        })
     end
-    require('neo-tree.command').execute({
-        reveal_file = reveal_file,
-        reveal_force_cwd = true,
-    })
 end, {
     desc = 'Focus: neo-tree'
 });
@@ -43,9 +43,11 @@ end, {
 })
 
 vim.keymap.set('n', '<A-f><A-g>', function()
-    neogit.open({
-        kind = 'vsplit_left'
-    })
+    if neogit_status then
+        neogit.open({
+            kind = 'vsplit_left'
+        })
+    end
 end, {
     desc = 'Focus: Neogit'
 })
@@ -57,82 +59,82 @@ end, {
 })
 
 vim.keymap.set('n', '<A-f><A-t>', function()
-    local toggleterm_terminal = require('toggleterm.terminal')
-    local terminal = toggleterm_terminal.Terminal:new({
-        cmd = 'pwsh',
-        direction = 'horizontal',
-        on_open = function(term)
-            vim.cmd('startinsert!')
-            vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', { noremap = true, silent = true })
-        end,
-        on_close = function(term)
-            vim.cmd('startinsert!')
-        end,
-    })
+    if toggleterm_terminal_status then
+        local terminal = toggleterm_terminal.Terminal:new({
+            cmd = 'pwsh',
+            direction = 'horizontal',
+            on_open = function(term)
+                vim.cmd('startinsert!')
+                vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', {
+                    silent = true
+                })
+            end,
+            on_close = function(term)
+                vim.cmd('startinsert!')
+            end,
+        })
 
-    terminal:toggle()
+        terminal:toggle()
+    end
 end, {
-    remap = true
+    desc = 'Focus: Terminal'
 })
 
-vim.keymap.set(
-    {
-        'n',
-        'i'
-    },
-    '<A-g><A-g>',
-    function()
+vim.keymap.set({ 'n', 'i' }, '<A-g><A-g>', function()
+    if neogit_status then
         neogit.open({
             'log',
             kind = 'tab'
         })
-    end,
-    {
-        desc = 'Git: Log'
-    }
-)
+    end
+end, {
+    desc = 'Git: Log'
+})
 
 vim.keymap.set('n', '<A-v>', function()
     vim.lsp.buf.hover()
 end, {
-    desc = 'Neogit: log_view'
+    desc = 'hover'
 })
 
-vim.keymap.set(
-    'n',
-    '<A-e>',
-    telescope_builtin.buffers
-)
+vim.keymap.set('n', '<A-e>', function()
+    -- require('telescope').extensions['recent-files'].recent_files({
+    --     theme = 'dropdown'
+    -- })
+    
+    if telescope_builtin_status then
+        telescope_builtin.buffers()
+    end
+end, {
+    desc = 'Open telescope buffers'
+})
 
 vim.keymap.set('n', '<leader><leader>e', function()
-    hop.hint_words({
-        direction = directions.AFTER_CURSOR
-    })
+    if hop_status and hop_hint_status then
+        hop.hint_words({
+            direction = hop_hint.HintDirection.AFTER_CURSOR
+        })
+    end
 end, {
-    remap = true
+    desc = 'Hop: After cursor'
 })
 
 vim.keymap.set('n', '<leader><leader>b', function()
-    hop.hint_words({
-        direction = directions.BEFORE_CURSOR
-    })
+    if hop_status and hop_hint_status then
+        hop.hint_words({
+            direction = hop_hint.HintDirection.BEFORE_CURSOR
+        })
+    end
 end, {
-    remap = true
+    desc = 'Hop: Before cursor'
 })
 
 vim.keymap.set('n', '<leader><leader>t', function()
-    vim.notify('Test')
-
-    -- 현재 열려있는 모든 윈도우의 ID를 가져옴
-    local window_list = vim.api.nvim_list_wins()
-
-    -- 각 윈도우의 버퍼 번호를 가져오고, 출력함
-    for _, win in ipairs(window_list) do
-        local buf = vim.api.nvim_win_get_buf(win)
-        print("Window ID: " .. win .. " Buffer ID: " .. buf)
-    end
+    vim.notify('Test2')
 end, {
-    remap = true
+    desc = 'Test'
 })
 
-vim.keymap.set('v', 'J', 'j', { noremap = true, silent = true })
+vim.keymap.set('v', 'J', 'j', {
+    silent = true
+})

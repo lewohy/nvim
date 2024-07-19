@@ -47,10 +47,15 @@ require('lazy').setup({
     },
     {
         'MunifTanjim/nui.nvim',
-        {
-            'rcarriga/nvim-notify',
-            opts = {
+    },
+    {
+        'rcarriga/nvim-notify',
+        opts = function()
+            local palettes = require('catppuccin.palettes').get_palette('mocha')
+
+            return {
                 fps = 60,
+                background_colour = palettes.surface0,
                 icons = {
                     DEBUG = '',
                     ERROR = '',
@@ -68,8 +73,8 @@ require('lazy').setup({
                 },
                 timeout = 5000,
                 top_down = false,
-            },
-        },
+            }
+        end
     },
     {
         'folke/noice.nvim',
@@ -83,6 +88,7 @@ require('lazy').setup({
             'MunifTanjim/nui.nvim',
             'rcarriga/nvim-notify',
         },
+        cond = vim.g.vscode == nil,
     },
     {
         'numToStr/Comment.nvim',
@@ -134,12 +140,15 @@ require('lazy').setup({
             comment.setup(opts)
 
             local ft = require('Comment.ft')
-            ft
-                .set('json', {
-                    '//%s',
-                    '/*%s*/',
-                })
-                .set('yaml', '#%s')
+            ft({
+                'json',
+                'jsonc',
+                'conf'
+            }, {
+                '//%s',
+                '/*%s*/',
+            })
+            ft({ 'yaml' }, '#%s')
         end,
         lazy = false,
     },
@@ -164,7 +173,7 @@ require('lazy').setup({
                 },
             }
 
-            vim.opt.guifont = { 'JetBrainsMono Nerd Font', ':h14' }
+            vim.opt.guifont = { 'JetBrainsMono Nerd Font', ':h10' }
         end,
         opts = {},
         config = function(_, opts)
@@ -462,8 +471,10 @@ require('lazy').setup({
         'nvim-telescope/telescope.nvim',
         branch = '0.1.x',
         dependencies = {
-            'nvim-lua/plenary.nvim'
+            'nvim-lua/plenary.nvim',
+            -- 'mollerhoj/telescope-recent-files.nvim',
         },
+        cond = vim.g.vscode == nil,
         opts = {
             pickers = {
                 buffers = {
@@ -477,7 +488,6 @@ require('lazy').setup({
                 },
             },
         },
-        cond = vim.g.vscode == nil,
     },
     {
         'lewis6991/gitsigns.nvim',
@@ -606,7 +616,7 @@ require('lazy').setup({
         dependencies = 'nvim-tree/nvim-web-devicons',
         opts = function()
             local hightlights = require('catppuccin.groups.integrations.bufferline').get({})
-            
+
             return {
                 highlights = hightlights,
                 options = {
