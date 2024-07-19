@@ -11,7 +11,7 @@ vim.opt.backspace = 'indent,eol,start'
 vim.opt.timeout = false
 
 -- gui 모드에서 폰트 설정
-vim.opt.guifont = { 'JetBrainsMono Nerd Font' }
+vim.opt.guifont = { 'JetBrainsMono Nerd Font', ':h10' }
 
 -- 현재 커서의 줄 하이라이팅
 vim.opt.cursorline = true
@@ -74,3 +74,4 @@ vim.opt.termguicolors = true
 if vim.g.vscode then vim.opt.shada = '' end
 
 vim.opt.background = 'dark'
+
