@@ -19,14 +19,24 @@ vim.opt.cursorline = true
 --     ctermfg = 1
 -- })
 
--- 탭문자의 길이는 4로 설정
 vim.opt.tabstop = 4
+
+-- 탭 키의 삽입할 공백 수와 백스페이스의 삭제할 공백 문자 수 설정
+vim.opt.softtabstop = 4
 
 -- 들여쓰기시 공백 갯수 설정
 vim.opt.shiftwidth = 4
 
 -- 들여쓰기 문자를 공백으로 설정
 vim.opt.expandtab = true
+
+-- 자동 들여쓰기 설정
+vim.opt.smartindent = true
+
+vim.opt.smarttab = true
+
+-- 다음줄 들여쓰기 설정
+vim.opt.autoindent = true
 
 -- 검색된 문자 하이라이팅
 vim.opt.hlsearch = true
@@ -39,15 +49,6 @@ vim.opt.smartcase = true
 
 -- 검색어 실시간 하이라이팅 설정
 vim.opt.incsearch = true
-
--- 자동 들여쓰기 설정
-vim.opt.smartindent = true
-
--- 다음줄 들여쓰기 설정
-vim.opt.autoindent = true
-
--- 탭 키의 삽입할 공백 수와 백스페이스의 삭제할 공백 문자 수 설정
-vim.opt.softtabstop = 1
 
 -- paste
 vim.opt.paste = false
@@ -75,3 +76,5 @@ if vim.g.vscode then vim.opt.shada = '' end
 
 vim.opt.background = 'dark'
 
+vim.api.nvim_create_user_command('Q', 'q', {})
+vim.api.nvim_create_user_command('W', 'w', {})

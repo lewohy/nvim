@@ -92,7 +92,8 @@ end, {
 })
 
 vim.keymap.set('n', '<A-v>', function()
-    vim.lsp.buf.hover()
+    -- vim.lsp.buf.hover()
+    vim.diagnostic.open_float()
 end, {
     desc = 'hover'
 })
@@ -101,7 +102,7 @@ vim.keymap.set('n', '<A-e>', function()
     -- require('telescope').extensions['recent-files'].recent_files({
     --     theme = 'dropdown'
     -- })
-    
+
     if telescope_builtin_status then
         telescope_builtin.buffers()
     end
@@ -131,6 +132,9 @@ end, {
 
 vim.keymap.set('n', '<leader><leader>t', function()
     vim.notify('Test2')
+    local vscode = require('vscode')
+    
+    vscode.eval("vscode.window.createWebviewPanel('test', 'Test', vscode.ViewColumn.One, {})")
 end, {
     desc = 'Test'
 })
