@@ -131,10 +131,7 @@ end, {
 })
 
 vim.keymap.set('n', '<leader><leader>t', function()
-    vim.notify('Test2')
-    local vscode = require('vscode')
-    
-    vscode.eval("vscode.window.createWebviewPanel('test', 'Test', vscode.ViewColumn.One, {})")
+    require('gitgraph').draw({}, { all = true, max_count = 5000 })
 end, {
     desc = 'Test'
 })

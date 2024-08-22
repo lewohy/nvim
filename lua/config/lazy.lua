@@ -303,10 +303,15 @@ require('lazy').setup({
         'karb94/neoscroll.nvim',
         opts = {
             mappings = { -- Keys to be mapped to their corresponding default scrolling animation
-                '<C-u>', '<C-d>',
-                '<C-b>', '<C-f>',
-                '<C-y>', '<C-e>',
-                'zt', 'zz', 'zb',
+                '<C-u>',
+                '<C-d>',
+                '<C-b>',
+                '<C-f>',
+                '<C-y>',
+                '<C-e>',
+                -- 'zt',
+                -- 'zz',
+                -- 'zb',
             },
             hide_cursor = false,         -- Hide cursor while scrolling
             stop_eof = true,             -- Stop at <EOF> when scrolling downwards
@@ -572,7 +577,10 @@ require('lazy').setup({
     },
     {
         'keaising/im-select.nvim',
-        opts = {},
+        opts = {
+            default_im_select = "en",
+            default_command   = "kren-select.exe",
+        },
     },
     {
         'tversteeg/registers.nvim',
@@ -622,7 +630,6 @@ require('lazy').setup({
     {
         'isakbm/gitgraph.nvim',
         dependencies = { 'sindrets/diffview.nvim' },
-        ---@type I.GGConfig
         opts = {
             symbols = {
                 merge_commit = 'M',
@@ -641,4 +648,13 @@ require('lazy').setup({
         end,
         config = true,
     },
+    {
+        'nat-418/boole.nvim',
+        config = {
+            mappings = {
+                increment = '<C-a>',
+                decrement = '<C-x>'
+            },
+        }
+    }
 })
