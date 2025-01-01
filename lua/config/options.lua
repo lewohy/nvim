@@ -65,7 +65,7 @@ vim.opt.undodir = vim.fn.stdpath('data') .. '/undodir'
 vim.opt.undofile = true
 
 -- 스크롤 오프셋 설정
-vim.opt.scrolloff = 3
+vim.opt.scrolloff = 100
 
 -- clipboard 사용
 vim.opt.clipboard = 'unnamedplus'

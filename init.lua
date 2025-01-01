@@ -7,7 +7,7 @@ end
 
 require('config.options')
 require('config.lazy')
-require('config.functions')
+local functions = require('config.functions')
 require('config.keymaps')
 
 
@@ -21,3 +21,9 @@ vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
 vim.api.nvim_set_hl(0, 'NormalFloat', {
     bg = nil
 })
+
+
+if vim.g.vscode == nil then
+    -- functions.open_note()
+end
+

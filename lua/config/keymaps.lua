@@ -1,39 +1,16 @@
-local telescope_builtin_status, telescope_builtin = pcall(require, 'telescope.builtin')
-local neogit_status, neogit = pcall(require, 'neogit')
-local hop_status, hop = pcall(require, 'hop')
-local neotree_command_status, neotree_command = pcall(require, 'neo-tree.command')
-local hop_hint_status, hop_hint = pcall(require, 'hop.hint')
-local toggleterm_terminal_status, toggleterm_terminal = pcall(require, 'toggleterm.terminal')
+local functions = require('config.functions')
 
 vim.keymap.set({ 'n', 'i' }, '<C-k><C-m>', function()
-    if telescope_builtin_status then
-        telescope_builtin.filetypes()
-    end
+    functions.open_telescope_filetypes()
 end, {
-    desc = 'Open telescope filetypes'
+    desc = 'telescope: filetypes'
 });
 
 
 vim.keymap.set({ 'n', 'i' }, '<A-f><A-f>', function()
-    if neotree_command_status then
-        local reveal_file = vim.fn.expand('%:p')
-        if (reveal_file == '') then
-            reveal_file = vim.fn.getcwd()
-        else
-            local f = io.open(reveal_file, 'r')
-            if (f) then
-                f.close(f)
-            else
-                reveal_file = vim.fn.getcwd()
-            end
-        end
-        neotree_command.execute({
-            reveal_file = reveal_file,
-            reveal_force_cwd = true,
-        })
-    end
+    functions.reveal_file_in_neotree()
 end, {
-    desc = 'Focus: neo-tree'
+    desc = 'neotree: reveal file'
 });
 
 vim.keymap.set('n', '<A-f><A-e>', function()
@@ -43,69 +20,37 @@ end, {
 })
 
 vim.keymap.set('n', '<A-f><A-g>', function()
-    if neogit_status then
-        neogit.open({
-            kind = 'vsplit_left'
-        })
-    end
+    functions.open_neogit()
 end, {
     desc = 'Focus: Neogit'
 })
 
 vim.keymap.set('n', '<A-f><A-i>', function()
-    vim.cmd('TodoLocList')
+    functions.open_todo_list()
 end, {
     desc = 'Focus: todo'
 })
 
 vim.keymap.set('n', '<A-f><A-t>', function()
-    if toggleterm_terminal_status then
-        local terminal = toggleterm_terminal.Terminal:new({
-            cmd = 'pwsh',
-            direction = 'horizontal',
-            on_open = function(term)
-                vim.cmd('startinsert!')
-                vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', {
-                    silent = true
-                })
-            end,
-            on_close = function(term)
-                vim.cmd('startinsert!')
-            end,
-        })
-
-        terminal:toggle()
-    end
+    functions.open_terminal()
 end, {
     desc = 'Focus: Terminal'
 })
 
 vim.keymap.set({ 'n', 'i' }, '<A-g><A-g>', function()
-    if neogit_status then
-        neogit.open({
-            'log',
-            kind = 'tab'
-        })
-    end
+    functions.open_neogit_graph()
 end, {
-    desc = 'Git: Log'
+    desc = 'Git: Graph'
 })
 
 vim.keymap.set('n', '<A-v>', function()
-    -- vim.lsp.buf.hover()
-    vim.diagnostic.open_float()
+    functions.show_hover()
 end, {
     desc = 'hover'
 })
 
 vim.keymap.set('n', '<A-e>', function()
-    -- require('telescope').extensions['recent-files'].recent_files({
-    --     theme = 'dropdown'
-    -- })
-
-    if telescope_builtin_status then
-        telescope_builtin.buffers()
-    end
+    functions.open_telescope_recent()
 end, {
     desc = 'Open telescope buffers'
 })

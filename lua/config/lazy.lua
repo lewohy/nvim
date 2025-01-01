@@ -88,13 +88,21 @@ require('lazy').setup({
             'MunifTanjim/nui.nvim',
             'rcarriga/nvim-notify',
         },
+        config = function(_, opts)
+            local noice = require('noice')
+            noice.setup(opts)
+
+            vim.keymap.set('c', '<S-Enter>', function()
+                noice.redirect(vim.fn.getcmdline())
+            end, { desc = 'Redirect Cmdline' })
+        end,
         cond = vim.g.vscode == nil,
     },
     {
-        "folke/ts-comments.nvim",
+        'folke/ts-comments.nvim',
         opts = {},
-        event = "VeryLazy",
-        enabled = vim.fn.has("nvim-0.10.0") == 1,
+        event = 'VeryLazy',
+        enabled = vim.fn.has('nvim-0.10.0') == 1,
     },
     {
         'glacambre/firenvim',
@@ -407,8 +415,70 @@ require('lazy').setup({
             'nvim-telescope/telescope.nvim',
             'ibhagwan/fzf-lua',
         },
-        opt = {},
-        config = true,
+        opts = {
+            graph_style = 'unicode',
+            kind = 'floating',
+            commit_editor = {
+                kind = 'floating',
+                show_staged_diff = true,
+                -- Accepted values:
+                -- 'split' to show the staged diff below the commit editor
+                -- 'vsplit' to show it to the right
+                -- 'split_above' Like :top split
+                -- 'vsplit_left' like :vsplit, but open to the left
+                -- 'auto' 'vsplit' if window would have 80 cols, otherwise 'split'
+                staged_diff_split_kind = 'split',
+                spell_check = true,
+            },
+            commit_select_view = {
+                kind = 'floating',
+            },
+            commit_view = {
+                kind = 'floating',
+                verify_commit = vim.fn.executable('gpg') == 1, -- Can be set to true or false, otherwise we try to find the binary
+            },
+            log_view = {
+                kind = 'floating',
+            },
+            rebase_editor = {
+                kind = 'floating',
+            },
+            reflog_view = {
+                kind = 'floating',
+            },
+            merge_editor = {
+                kind = 'floating',
+            },
+            description_editor = {
+                kind = 'floating',
+            },
+            tag_editor = {
+                kind = 'floating',
+            },
+            preview_buffer = {
+                kind = 'floating',
+            },
+            popup = {
+                kind = 'floating',
+            },
+            stash = {
+                kind = 'floating',
+            },
+            refs_view = {
+                kind = 'floating',
+            },
+            signs = {
+                -- { CLOSED, OPENED }
+                hunk = { '', '' },
+                item = { '>', 'v' },
+                section = { '>', 'v' },
+            },
+            mappings = {
+                status = {
+                    ['<ESC>'] = 'Close',
+                }
+            }
+        },
         cond = vim.g.vscode == nil,
     },
     {
@@ -577,10 +647,15 @@ require('lazy').setup({
     },
     {
         'keaising/im-select.nvim',
-        opts = {
-            default_im_select = "en",
-            default_command   = "kren-select.exe",
-        },
+        opts = function()
+            if (vim.loop.os_uname().sysname == 'Windows_NT') then
+                return {
+                    default_im_select = 'en',
+                    default_command   = 'kren-select.exe',
+                }
+            end
+        end,
+        cond = vim.loop.os_uname().sysname == 'Windows_NT'
     },
     {
         'tversteeg/registers.nvim',
@@ -595,7 +670,7 @@ require('lazy').setup({
         config = true,
         keys = {
             {
-                '\"',
+                '\'',
                 mode = { 'n', 'v' }
             },
             {
@@ -613,16 +688,16 @@ require('lazy').setup({
         cond = vim.g.vscode == nil,
     },
     {
-        "zbirenbaum/copilot.lua",
-        cmd = "Copilot",
-        build = ":Copilot auth",
+        'zbirenbaum/copilot.lua',
+        cmd = 'Copilot',
+        build = ':Copilot auth',
         opts = {
             suggestion = {
                 enabled = true,
                 auto_trigger = true
             },
             filetypes = {
-                ["*"] = true,
+                ['*'] = true,
             },
         },
         cond = vim.g.vscode == nil,
@@ -654,6 +729,30 @@ require('lazy').setup({
             mappings = {
                 increment = '<C-a>',
                 decrement = '<C-x>'
+            },
+        }
+    },
+    {
+        'Shougo/deoplete.nvim'
+    },
+    {
+        'windwp/nvim-autopairs',
+        event = 'InsertEnter',
+        config = true
+        -- use opts = {} for passing setup options
+        -- this is equivalent to setup({}) function
+    },
+    {
+        'stevearc/conform.nvim',
+        opts = {
+            formatters_by_ft = {
+                lua = { 'stylua' },
+                -- Conform will run multiple formatters sequentially
+                python = { 'black' },
+                -- You can customize some of the format options for the filetype (:help conform.format)
+                rust = { 'rustfmt', lsp_format = 'fallback' },
+                -- Conform will run the first available formatter
+                javascript = { 'prettierd', 'prettier', stop_after_first = true },
             },
         }
     }
