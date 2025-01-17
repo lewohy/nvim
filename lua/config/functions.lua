@@ -1,8 +1,8 @@
 local telescope_builtin_status, telescope_builtin = pcall(require, 'telescope.builtin')
 local neogit_status, neogit = pcall(require, 'neogit')
 local hop_status, hop = pcall(require, 'hop')
-local neotree_command_status, neotree_command = pcall(require, 'neo-tree.command')
 local hop_hint_status, hop_hint = pcall(require, 'hop.hint')
+local neotree_command_status, neotree_command = pcall(require, 'neo-tree.command')
 local toggleterm_terminal_status, toggleterm_terminal = pcall(require, 'toggleterm.terminal')
 local nui_status, Popup = pcall(require, 'nui.popup')
 
@@ -101,7 +101,7 @@ end
 function functions.open_neogit_graph()
     if neogit_status then
         neogit.action(
-            'log', 'log_current', { "-g" }
+            'log', 'log_current', { "--graph", "--decorate" }
         )()
     end
 end
@@ -118,6 +118,22 @@ function functions.open_telescope_recent()
 
     if telescope_builtin_status then
         telescope_builtin.buffers()
+    end
+end
+
+function functions.hop_after_cursor()
+    if hop_status and hop_hint_status then
+        hop.hint_words({
+            direction = hop_hint.HintDirection.AFTER_CURSOR
+        })
+    end
+end
+
+function functions.hop_before_cursor()
+    if hop_status and hop_hint_status then
+        hop.hint_words({
+            direction = hop_hint.HintDirection.BEFORE_CURSOR
+        })
     end
 end
 

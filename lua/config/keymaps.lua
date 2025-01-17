@@ -56,21 +56,13 @@ end, {
 })
 
 vim.keymap.set('n', '<leader><leader>e', function()
-    if hop_status and hop_hint_status then
-        hop.hint_words({
-            direction = hop_hint.HintDirection.AFTER_CURSOR
-        })
-    end
+    functions.hop_after_cursor()
 end, {
     desc = 'Hop: After cursor'
 })
 
 vim.keymap.set('n', '<leader><leader>b', function()
-    if hop_status and hop_hint_status then
-        hop.hint_words({
-            direction = hop_hint.HintDirection.BEFORE_CURSOR
-        })
-    end
+    functions.hop_before_cursor()
 end, {
     desc = 'Hop: Before cursor'
 })

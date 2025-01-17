@@ -107,7 +107,7 @@ require('lazy').setup({
     {
         'glacambre/firenvim',
         lazy = false,
-        cond = vim.g.started_by_firenvim == true,
+        -- cond = vim.g.started_by_firenvim == true,
         build = function()
             vim.fn['firenvim#install'](0)
         end,
@@ -587,18 +587,17 @@ require('lazy').setup({
             filesystem = {
                 filtered_items = {
                     visible = true, -- when true, they will just be displayed differently than normal items
-                    hide_dotfiles = true,
-                    hide_gitignored = true,
-                    hide_hidden = true, -- only works on Windows for hidden files/directories
+                    hide_dotfiles = false,
+                    hide_gitignored = false,
+                    hide_hidden = false, -- only works on Windows for hidden files/directories
                     hide_by_name = {
                         'node_modules'
                     },
                 },
-            }
-        },
-        window = {
-            position = 'left',
-            width = 40,
+            },
+            window = {
+                position = 'float',
+            },
         },
         cond = vim.g.vscode == nil,
     },
@@ -639,6 +638,7 @@ require('lazy').setup({
             return {
                 highlights = hightlights,
                 options = {
+                    mode = "tabs",
                     separator_style = 'slant',
                 }
             }
@@ -648,14 +648,14 @@ require('lazy').setup({
     {
         'keaising/im-select.nvim',
         opts = function()
-            if (vim.loop.os_uname().sysname == 'Windows_NT') then
+            if (vim.uv.os_uname().sysname == 'Windows_NT') then
                 return {
                     default_im_select = 'en',
                     default_command   = 'kren-select.exe',
                 }
             end
         end,
-        cond = vim.loop.os_uname().sysname == 'Windows_NT'
+        cond = vim.uv.os_uname().sysname == 'Windows_NT'
     },
     {
         'tversteeg/registers.nvim',
