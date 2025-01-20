@@ -3,8 +3,8 @@ local neogit_status, neogit = pcall(require, 'neogit')
 local hop_status, hop = pcall(require, 'hop')
 local hop_hint_status, hop_hint = pcall(require, 'hop.hint')
 local neotree_command_status, neotree_command = pcall(require, 'neo-tree.command')
-local toggleterm_terminal_status, toggleterm_terminal = pcall(require, 'toggleterm.terminal')
 local nui_status, Popup = pcall(require, 'nui.popup')
+local conform_status, conform = pcall(require, 'conform')
 
 local functions = {}
 
@@ -79,23 +79,7 @@ function functions.open_todo_list()
 end
 
 function functions.open_terminal()
-    if toggleterm_terminal_status then
-        local terminal = toggleterm_terminal.Terminal:new({
-            cmd = 'pwsh',
-            direction = 'horizontal',
-            on_open = function(term)
-                vim.cmd('startinsert!')
-                vim.api.nvim_buf_set_keymap(term.bufnr, 'n', 'q', '<cmd>close<CR>', {
-                    silent = true
-                })
-            end,
-            on_close = function(term)
-                vim.cmd('startinsert!')
-            end,
-        })
 
-        terminal:toggle()
-    end
 end
 
 function functions.open_neogit_graph()
@@ -133,6 +117,14 @@ function functions.hop_before_cursor()
     if hop_status and hop_hint_status then
         hop.hint_words({
             direction = hop_hint.HintDirection.BEFORE_CURSOR
+        })
+    end
+end
+
+function functions.conform_format()
+    if conform_status then
+        conform.format({
+            bufnr = vim.api.nvim_get_current_buf()
         })
     end
 end

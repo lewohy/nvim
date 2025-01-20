@@ -55,6 +55,12 @@ end, {
     desc = 'Open telescope buffers'
 })
 
+vim.keymap.set({ 'n', 'i' }, '<A-F>', function()
+    functions.conform_format()
+end, {
+    desc = 'Open telescope buffers'
+})
+
 vim.keymap.set('n', '<leader><leader>e', function()
     functions.hop_after_cursor()
 end, {

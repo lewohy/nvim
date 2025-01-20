@@ -1,4 +1,5 @@
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+---@diagnostic disable-next-line: undefined-field
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
         'git',
@@ -129,46 +130,57 @@ require('lazy').setup({
         end,
         opts = {},
         config = function(_, opts)
-            local id = vim.api.nvim_create_augroup('ExpandLinesOnTextChanged', { clear = true })
-            local max_height = 20
-            local height_offset = 4
-            local resize_window = function(event)
-                local height = vim.api.nvim_win_text_height(0, {}).all + height_offset
+            if vim.g.started_by_firenvim == true then
+                local id = vim.api.nvim_create_augroup('ExpandLinesOnTextChanged', { clear = true })
+                local max_height = 20
+                local height_offset = 4
+                local resize_window = function(event)
+                    local height = vim.api.nvim_win_text_height(0, {}).all + height_offset
 
-                if height > vim.o.lines and height < max_height then
-                    vim.o.lines = height
-                    vim.cmd('norm! zb')
-                end
-            end
-
-            vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
-                group = id,
-                callback = function(event)
-                    resize_window(event)
-
-                    if vim.g.timer_started == true then
-                        return
+                    if height > vim.o.lines and height < max_height then
+                        vim.o.lines = height
+                        vim.cmd('norm! zb')
                     end
-                    vim.g.timer_started = true
-                    vim.fn.timer_start(1000, function()
-                        vim.g.timer_started = false
-                        vim.cmd('silent write')
-
-                        vim.fn.timer_start(100, function()
-                            resize_window(event)
-                        end)
-                    end)
                 end
-            })
 
-            vim.api.nvim_create_autocmd({ 'UIEnter' }, {
-                group = id,
-                callback = function(event)
-                    vim.fn.timer_start(100, function()
+                vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
+                    group = id,
+                    callback = function(event)
                         resize_window(event)
-                    end)
-                end
-            })
+
+                        if vim.g.timer_started == true then
+                            return
+                        end
+                        vim.g.timer_started = true
+                        vim.fn.timer_start(
+                            1000,
+                            function()
+                                vim.g.timer_started = false
+                                vim.cmd('silent! write')
+
+                                vim.fn.timer_start(
+                                    100,
+                                    function()
+                                        resize_window(event)
+                                    end
+                                )
+                            end
+                        )
+                    end
+                })
+
+                vim.api.nvim_create_autocmd({ 'UIEnter' }, {
+                    group = id,
+                    callback = function(event)
+                        vim.fn.timer_start(
+                            100,
+                            function()
+                                resize_window(event)
+                            end
+                        )
+                    end
+                })
+            end
         end
     },
     {
@@ -240,6 +252,12 @@ require('lazy').setup({
                     lualine_x = {},
                     lualine_y = {
                         {
+                            'location',
+                            cond = function()
+                                return (not is_neo_tree()) and (not is_todo())
+                            end,
+                        },
+                        {
                             'encoding',
                             cond = function()
                                 return (not is_neo_tree()) and (not is_todo())
@@ -247,12 +265,11 @@ require('lazy').setup({
                         },
                         {
                             'fileformat',
-                            cond = function()
-                                return (not is_neo_tree()) and (not is_todo())
-                            end,
-                        },
-                        {
-                            'filetype',
+                            symbols = {
+                                unix = 'LF',
+                                dos = 'CRLF',
+                                mac = 'CR',
+                            },
                             cond = function()
                                 return (not is_neo_tree()) and (not is_todo())
                             end,
@@ -260,7 +277,7 @@ require('lazy').setup({
                     },
                     lualine_z = {
                         {
-                            'location',
+                            'filetype',
                             cond = function()
                                 return (not is_neo_tree()) and (not is_todo())
                             end,
@@ -491,7 +508,7 @@ require('lazy').setup({
         branch = '0.1.x',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            -- 'mollerhoj/telescope-recent-files.nvim',
+            'mollerhoj/telescope-recent-files.nvim',
         },
         cond = vim.g.vscode == nil,
         opts = {
@@ -585,6 +602,7 @@ require('lazy').setup({
                 },
             },
             filesystem = {
+                bind_to_cwd = true,
                 filtered_items = {
                     visible = true, -- when true, they will just be displayed differently than normal items
                     hide_dotfiles = false,
@@ -603,30 +621,33 @@ require('lazy').setup({
     },
     {
         'williamboman/mason.nvim',
-        opts = {
-            ui = {
-                icons = {
-                    package_installed = '✓',
-                    package_pending = '➜',
-                    package_uninstalled = '✗'
-                }
-            }
-        },
+        config = true
     },
-    {
-        'williamboman/mason-lspconfig.nvim',
-        opts = {},
-    },
+    -- {
+    --     'williamboman/mason-lspconfig.nvim',
+    --     config = true
+    -- },
     {
         'neovim/nvim-lspconfig',
         config = function()
-            require('mason-lspconfig').setup_handlers {
-                function(server_name)
-                    require('lspconfig')[server_name].setup({})
-                end,
-            }
+            local lspconfig = require('lspconfig')
+            lspconfig.pyright.setup {}
+            lspconfig.clangd.setup {}
+            lspconfig.rust_analyzer.setup {}
         end,
         cond = vim.g.vscode == nil,
+    },
+    {
+        'stevearc/conform.nvim',
+        opts = {
+            formatters_by_ft = {
+                lua = { 'stylua' },
+                python = { 'black' },
+                cpp = { 'clang-format' },
+                rust = { 'rustfmt', lsp_format = 'fallback' },
+                -- javascript = { 'prettierd', 'prettier', stop_after_first = true },
+            },
+        }
     },
     {
         'akinsho/bufferline.nvim',
@@ -638,7 +659,7 @@ require('lazy').setup({
             return {
                 highlights = hightlights,
                 options = {
-                    mode = "tabs",
+                    mode = 'tabs',
                     separator_style = 'slant',
                 }
             }
@@ -648,6 +669,7 @@ require('lazy').setup({
     {
         'keaising/im-select.nvim',
         opts = function()
+            ---@diagnostic disable-next-line: undefined-field
             if (vim.uv.os_uname().sysname == 'Windows_NT') then
                 return {
                     default_im_select = 'en',
@@ -655,6 +677,7 @@ require('lazy').setup({
                 }
             end
         end,
+        ---@diagnostic disable-next-line: undefined-field
         cond = vim.uv.os_uname().sysname == 'Windows_NT'
     },
     {
@@ -679,12 +702,6 @@ require('lazy').setup({
             }
         },
         name = 'registers',
-        cond = vim.g.vscode == nil,
-    },
-    {
-        'akinsho/toggleterm.nvim',
-        version = '*',
-        config = true,
         cond = vim.g.vscode == nil,
     },
     {
@@ -739,21 +756,5 @@ require('lazy').setup({
         'windwp/nvim-autopairs',
         event = 'InsertEnter',
         config = true
-        -- use opts = {} for passing setup options
-        -- this is equivalent to setup({}) function
     },
-    {
-        'stevearc/conform.nvim',
-        opts = {
-            formatters_by_ft = {
-                lua = { 'stylua' },
-                -- Conform will run multiple formatters sequentially
-                python = { 'black' },
-                -- You can customize some of the format options for the filetype (:help conform.format)
-                rust = { 'rustfmt', lsp_format = 'fallback' },
-                -- Conform will run the first available formatter
-                javascript = { 'prettierd', 'prettier', stop_after_first = true },
-            },
-        }
-    }
 })
