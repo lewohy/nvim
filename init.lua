@@ -1,29 +1,26 @@
 if vim.g.vscode then
-    local vscode = require('vscode')
-    vim.notify = vscode.notify
-
-    vim.notify('VSCode mode enabled')
+    require('thirdparty.vscode')
 end
-
-require('config.options')
-require('config.lazy')
-local functions = require('config.functions')
-require('config.keymaps')
-
 
 if vim.g.neovide then
-    require('config.neovide')
+    require('thirdparty.neovide')
 end
 
-vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = 'rounded',
-})
-vim.api.nvim_set_hl(0, 'NormalFloat', {
-    bg = nil
-})
+require('config.lazy')
 
+-- vim.api.nvim_set_hl(0, 'NormalFloat', {
+--     bg = nil
+-- })
 
-if vim.g.vscode == nil then
-    -- functions.open_note()
+function Dump(o)
+    if type(o) == 'table' then
+        local s = '{ '
+        for k, v in pairs(o) do
+            if type(k) ~= 'number' then k = '"' .. k .. '"' end
+            s = s .. '[' .. k .. '] = ' .. Dump(v) .. ','
+        end
+        return s .. '} '
+    else
+        return tostring(o)
+    end
 end
-

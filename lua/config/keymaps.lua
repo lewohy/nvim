@@ -1,12 +1,13 @@
-local functions = require('config.functions')
+local functions = require('functions')
 
+-- File Type
 vim.keymap.set({ 'n', 'i' }, '<C-k><C-m>', function()
     functions.open_telescope_filetypes()
 end, {
     desc = 'telescope: filetypes'
 });
 
-
+-- Focus
 vim.keymap.set({ 'n', 'i' }, '<A-f><A-f>', function()
     functions.reveal_file_in_neotree()
 end, {
@@ -31,12 +32,8 @@ end, {
     desc = 'Focus: todo'
 })
 
-vim.keymap.set('n', '<A-f><A-t>', function()
-    functions.open_terminal()
-end, {
-    desc = 'Focus: Terminal'
-})
 
+-- Git
 vim.keymap.set({ 'n', 'i' }, '<A-g><A-g>', function()
     functions.open_neogit_graph()
 end, {
@@ -49,14 +46,14 @@ end, {
     desc = 'hover'
 })
 
-vim.keymap.set('n', '<A-e>', function()
+vim.keymap.set({ 'n', 'i' }, '<A-e>', function()
     functions.open_telescope_recent()
 end, {
     desc = 'Open telescope buffers'
 })
 
 vim.keymap.set({ 'n', 'i' }, '<A-F>', function()
-    functions.conform_format()
+    functions.format_code()
 end, {
     desc = 'Open telescope buffers'
 })
@@ -81,4 +78,20 @@ end, {
 
 vim.keymap.set('v', 'J', 'j', {
     silent = true
+})
+
+if vim.g.vscode == nil then
+    vim.keymap.set('i', '<C-SPACE>', '<C-X><C-O>', {
+        desc = 'Test'
+    })
+end
+
+vim.keymap.set('c', '<S-Enter>', function()
+    functions.noice_redirect_cmd()
+end, { desc = 'Redirect Cmdline' })
+
+vim.keymap.set('n', '<ESC>', function()
+    vim.fn.system('fcitx5-remote -c')
+end, {
+    desc = 'fcitx5-remote -c'
 })

@@ -20,7 +20,7 @@ vim.api.nvim_create_autocmd({ "CmdlineEnter", "CmdlineLeave" }, {
     callback = set_ime
 })
 
-vim.g.neovide_scale_factor = 1.2
+vim.g.neovide_scale_factor = 1
 vim.g.neovide_cursor_vfx_mode = "pixiedust"
 vim.g.neovide_cursor_vfx_particle_density = 100.0
 
@@ -31,3 +31,5 @@ vim.keymap.set('n', '<S-Insert>', '"+P')
 vim.keymap.set('v', '<S-Insert>', '"+P')
 vim.keymap.set('c', '<S-Insert>', '<C-R>+')
 vim.keymap.set('i', '<S-Insert>', '<ESC>l"+Pli')
+
+vim.notify("neovide enabled")
