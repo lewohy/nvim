@@ -1,26 +1,28 @@
 if vim.g.vscode then
-    require('thirdparty.vscode')
+	require("thirdparty.vscode")
 end
 
 if vim.g.neovide then
-    require('thirdparty.neovide')
+	require("thirdparty.neovide")
 end
 
-require('config.lazy')
+require("config.lazy")
 
 -- vim.api.nvim_set_hl(0, 'NormalFloat', {
 --     bg = nil
 -- })
 
 function Dump(o)
-    if type(o) == 'table' then
-        local s = '{ '
-        for k, v in pairs(o) do
-            if type(k) ~= 'number' then k = '"' .. k .. '"' end
-            s = s .. '[' .. k .. '] = ' .. Dump(v) .. ','
-        end
-        return s .. '} '
-    else
-        return tostring(o)
-    end
+	if type(o) == "table" then
+		local s = "{ "
+		for k, v in pairs(o) do
+			if type(k) ~= "number" then
+				k = '"' .. k .. '"'
+			end
+			s = s .. "[" .. k .. "] = " .. Dump(v) .. ","
+		end
+		return s .. "} "
+	else
+		return tostring(o)
+	end
 end

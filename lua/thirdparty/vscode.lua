@@ -1,4 +1,4 @@
-local vscode = require('vscode')
+local vscode = require("vscode")
 vim.notify = vscode.notify
 
-vim.notify('VSCode mode enabled')
+vim.notify("VSCode mode enabled")
