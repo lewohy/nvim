@@ -14,7 +14,7 @@ return {
 				"shfmt",
 				"ruff",
 				"rustfmt",
-				"prettierd",
+				"biome",
 				"clang-format",
                 "google-java-format",
 			},

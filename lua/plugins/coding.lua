@@ -30,4 +30,14 @@ return {
 		},
 		cond = true,
 	},
+	{
+		"nat-418/boole.nvim",
+		config = {
+			mappings = {
+				increment = "<C-a>",
+				decrement = "<C-x>",
+			},
+		},
+		cond = true,
+	},
 }

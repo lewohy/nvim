@@ -1,6 +1,6 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
-		cond = true,
+		cond = vim.g.vscode == nil,
 	},
 }

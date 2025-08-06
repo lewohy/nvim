@@ -26,3 +26,9 @@ function Dump(o)
 		return tostring(o)
 	end
 end
+
+vim.filetype.add({
+	pattern = {
+		[".*/%.vscode/.+.json"] = "jsonc",
+	},
+})
