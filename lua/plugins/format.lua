@@ -33,6 +33,10 @@ return {
 				javascriptreact = { "biome_jsx" },
 				typescript = { "biome_ts" },
 				typescriptreact = { "biome_tsx" },
+				yaml = { "yamlfmt" },
+				typst = { "typstyle" },
+				toml = { "taplo" },
+                dockerfile = { "dockerfmt" },
 			},
 			default_format_opts = {
 				lsp_format = "fallback",
@@ -123,6 +127,13 @@ return {
 						"4",
 						"--stdin-file-path",
 						"foo.tsx",
+					},
+				},
+				taplo = {
+					command = "taplo",
+					args = {
+						"format",
+						"-",
 					},
 				},
 				fallback_clang_format = {

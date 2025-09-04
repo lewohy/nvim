@@ -52,8 +52,8 @@ return {
 	},
 	{
 		"akinsho/bufferline.nvim",
-		-- version = "*",
-		-- dependencies = "nvim-tree/nvim-web-devicons",
+		version = "*",
+		dependencies = "nvim-tree/nvim-web-devicons",
 		keys = function()
 			return {}
 		end,
@@ -64,22 +64,12 @@ return {
 				always_show_bufferline = true,
 			},
 		},
-		-- opts = function()
-		-- 	local hightlights = require("catppuccin.groups.integrations.bufferline").get({})
-
-		-- 	return {
-		-- 		highlights = hightlights,
-		-- 		options = {
-		-- 			mode = "tabs",
-		-- 			separator_style = "slant",
-		-- 		},
-		-- 	}
-		-- end,
 		cond = vim.g.vscode == nil,
 	},
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
+		priority = 1000,
 		opts = function()
 			local function is_neo_tree()
 				return vim.bo.filetype == "neo-tree"
@@ -103,7 +93,7 @@ return {
 						section_separators = { left = " ", right = " " },
 						ignore_focus = {},
 						always_divide_middle = true,
-						globalstatus = false,
+						globalstatus = true,
 						refresh = {
 							statusline = 100,
 							tabline = 100,
@@ -140,7 +130,7 @@ return {
 			return {
 				options = {
 					icons_enabled = true,
-					theme = "catppuccin",
+					theme = "auto",
 					component_separators = { left = "", right = "" },
 					section_separators = { left = "", right = "" },
 					disabled_filetypes = {
@@ -149,7 +139,7 @@ return {
 					},
 					ignore_focus = {},
 					always_divide_middle = true,
-					globalstatus = false,
+					globalstatus = true,
 					refresh = {
 						statusline = 100,
 						tabline = 100,
@@ -239,7 +229,7 @@ return {
 				extensions = {},
 			}
 		end,
-        cond = vim.g.vscode == nil,
+		cond = vim.g.vscode == nil,
 	},
 	{
 		"petertriho/nvim-scrollbar",

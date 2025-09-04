@@ -407,6 +407,7 @@ return {
 			case_insensitive = false,
 			multi_windows = true,
 		},
+		cond = true,
 	},
 	{
 		"zbirenbaum/copilot.lua",
