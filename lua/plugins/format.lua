@@ -1,3 +1,18 @@
+local function create_clang_format_config()
+	if vim.fn.filereadable(".clang-format") == 1 then
+		return {
+			command = "clang-format",
+		}
+	end
+
+	return {
+		command = "clang-format",
+		args = {
+			"--style=file:/home/lewohy/.config/clang-format/.clang-format",
+		},
+	}
+end
+
 return {
 	{
 		"stevearc/conform.nvim",
@@ -21,8 +36,8 @@ return {
 					"ruff_format",
 					"ruff_organize_imports",
 				},
-				cpp = { "fallback_clang_format" },
-				c = { "fallback_clang_format" },
+				cpp = { "clang_format" },
+				c = { "clang_format" },
 				rust = { "rustfmt" },
 				wgsl = { "wgslfmt" },
 				json = { "biome_json" },
@@ -36,12 +51,17 @@ return {
 				yaml = { "yamlfmt" },
 				typst = { "typstyle" },
 				toml = { "taplo" },
-                dockerfile = { "dockerfmt" },
+				dockerfile = { "dockerfmt" },
+				meson = { "mesonfmt" },
 			},
 			default_format_opts = {
 				lsp_format = "fallback",
 			},
 			formatters = {
+				mesonfmt = {
+					command = "meson",
+					args = { "format" },
+				},
 				wgslfmt = {
 					command = "wgslfmt",
 				},
@@ -136,12 +156,7 @@ return {
 						"-",
 					},
 				},
-				fallback_clang_format = {
-					command = "clang-format",
-					args = {
-						"-style=file:/home/lewohy/.config/clang-format/.clang-format",
-					},
-				},
+				clang_format = create_clang_format_config(),
 			},
 		},
 		vscode = true,

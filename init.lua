@@ -1,5 +1,5 @@
 if vim.g.vscode then
-	require("thirdparty.vscode")
+	require("thirdparty.vscode.init")
 end
 
 if vim.g.neovide then

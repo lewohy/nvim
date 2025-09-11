@@ -49,28 +49,10 @@ end, {
 	desc = "Open telescope buffers",
 })
 
-vim.keymap.del({ "n", "v" }, "<leader>cf")
+-- vim.keymap.del({ "n", "v" }, "<leader>cf")
 vim.keymap.set({ "n", "i" }, "<A-F>", function()
 	LazyVim.format({ force = true })
 end, { desc = "Format" })
-
-vim.keymap.set("n", "<leader><leader>e", function()
-	functions.hop_after_cursor()
-end, {
-	desc = "Hop: After cursor",
-})
-
-vim.keymap.set("n", "<leader><leader>b", function()
-	functions.hop_before_cursor()
-end, {
-	desc = "Hop: Before cursor",
-})
-
-vim.keymap.set("n", "<leader><leader>t", function()
-	require("gitgraph").draw({}, { all = true, max_count = 5000 })
-end, {
-	desc = "Test",
-})
 
 vim.keymap.set("v", "J", "j", {
 	silent = true,
@@ -92,11 +74,10 @@ end, {
 	desc = "fcitx5-remote -c",
 })
 
-vim.keymap.set("n", "<leader>tt", function()
-	vim.notify("CWD: " .. vim.fn.getcwd())
-	vim.notify("File: " .. vim.fn.expand("%:p"))
-	vim.notify("Filetype: " .. vim.bo.filetype)
-	print(vim.inspect(require("lazy.core.config")))
-end, {
-	desc = "Toggle Quickfix",
-})
+-- vim.keymap.set("n", "<leader><leader>t", function()
+-- 	vim.notify("CWD: " .. vim.fn.getcwd())
+-- 	vim.notify("File: " .. vim.fn.expand("%:p"))
+-- 	vim.notify("Filetype: " .. vim.bo.filetype)
+-- end, {
+-- 	desc = "Toggle Quickfix",
+-- })

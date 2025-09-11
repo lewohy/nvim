@@ -6,11 +6,4 @@ vim.api.nvim_create_autocmd({ "FocusGained", "InsertLeave", "CmdlineEnter" }, {
 })
 
 if vim.g.vscode ~= nil then
-	vim.api.nvim_create_autocmd({ "BufWriteCmd" }, {
-		pattern = "*",
-		callback = function()
-			local vscode = require("vscode")
-			vscode.action("workbench.action.files.save")
-		end,
-	})
 end
