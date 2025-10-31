@@ -1,4 +1,5 @@
 return {
+	--- @type LazySpec
 	{
 		"snacks.nvim",
 		opts = function()

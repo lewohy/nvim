@@ -85,6 +85,8 @@ return {
 						"space",
 						"--indent-width",
 						"4",
+                        "--json-formatter-trailing-commas",
+                        "all",
 						"--stdin-file-path",
 						"foo.jsonc",
 					},

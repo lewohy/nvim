@@ -187,6 +187,7 @@ return {
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
+		---@type NoiceConfig
 		opts = {
 			cmdline = {
 				enabled = true, -- enables the Noice cmdline UI

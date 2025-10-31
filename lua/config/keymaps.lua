@@ -1,5 +1,8 @@
 local functions = require("functions")
 
+vim.keymap.del("n", "<S-h>")
+vim.keymap.del("n", "<S-l>")
+
 -- File Type
 vim.keymap.set({ "n", "i" }, "<C-k><C-m>", function()
 	functions.open_telescope_filetypes()
@@ -37,7 +40,7 @@ end, {
 	desc = "Git: Graph",
 })
 
-vim.keymap.set("n", "<A-v>", function()
+vim.keymap.set("n", "<leader>v", function()
 	functions.show_hover()
 end, {
 	desc = "hover",
@@ -51,6 +54,18 @@ end, {
 
 -- vim.keymap.del({ "n", "v" }, "<leader>cf")
 vim.keymap.set({ "n", "i" }, "<A-F>", function()
+	if vim.g.vscode then
+		local filename = vim.fn.expand("%:p")
+        local test_str = "vscode-remote://dev-container"
+		if filename:sub(1, test_str:len()) == test_str then
+            vim.notify("Using VSCode Formatter")
+
+			local vscode = require("vscode")
+			vscode.action("editor.action.formatDocument")
+			return
+		end
+	end
+
 	LazyVim.format({ force = true })
 end, { desc = "Format" })
 
