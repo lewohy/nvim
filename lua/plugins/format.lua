@@ -29,6 +29,9 @@ return {
 			}
 		end,
 		opts = {
+			lang_to_ext = {
+				c_sharp = "cs",
+			},
 			formatters_by_ft = {
 				lua = { "stylua" },
 				python = {
@@ -38,6 +41,7 @@ return {
 				},
 				cpp = { "clang_format" },
 				c = { "clang_format" },
+				cs = { "csharpier" },
 				rust = { "rustfmt" },
 				wgsl = { "wgslfmt" },
 				json = { "biome_json" },
@@ -58,6 +62,10 @@ return {
 				lsp_format = "fallback",
 			},
 			formatters = {
+				csharpier = {
+					command = "csharpier",
+					args = { "format" },
+				},
 				mesonfmt = {
 					command = "meson",
 					args = { "format" },
@@ -85,8 +93,8 @@ return {
 						"space",
 						"--indent-width",
 						"4",
-                        "--json-formatter-trailing-commas",
-                        "all",
+						"--json-formatter-trailing-commas",
+						"all",
 						"--stdin-file-path",
 						"foo.jsonc",
 					},

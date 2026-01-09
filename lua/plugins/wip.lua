@@ -154,6 +154,9 @@ return {
 		},
 	},
 	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+	},
+	{
 		"MunifTanjim/nui.nvim",
 	},
 	{
