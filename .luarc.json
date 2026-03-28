@@ -2,7 +2,9 @@
 	"$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
 	"workspace.library": [
 		"/usr/share/nvim/runtime",
-		"${env:HOME}/.local/share/nvim"
+		"${env:HOME}/.local/share/nvim",
+        "C:\\Program Files\\Neovim\\share\\nvim",
+        "C:\\Users\\wh\\AppData\\Local\\nvim-data\\lazy"
 	],
 	"runtime.version": "Lua 5.3",
     "type.checkTableShape": true,

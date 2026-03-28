@@ -3,13 +3,16 @@ return {
 		"catppuccin/nvim",
 		name = "catppuccin",
 		priority = 1000,
-		opts = function(_, opts)
-			local module = require("catppuccin.groups.integrations.bufferline")
-			if module then
-				module.get = module.get_theme
-			end
-			return opts
-		end,
+        opts = {
+            auto_integrations = true
+        }
+		-- opts = function(_, opts)
+		-- 	local module = require("catppuccin.groups.integrations.bufferline")
+		-- 	if module then
+		-- 		module.get = module.get_theme
+		-- 	end
+		-- 	return opts
+		-- end,
 		-- opts = {
 		-- 	flavour = "mocha", -- latte, frappe, macchiato, mocha
 		-- 	integrations = {
@@ -77,10 +80,10 @@ return {
 		-- 	})
 		-- end,
 	},
-	{
-		"LazyVim/LazyVim",
-		opts = {
-			colorscheme = "catppuccin",
-		},
-	},
+	-- {
+	-- 	"LazyVim/LazyVim",
+	-- 	opts = {
+	-- 		colorscheme = "catppuccin",
+	-- 	},
+	-- },
 }

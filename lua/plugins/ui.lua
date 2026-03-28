@@ -1,14 +1,11 @@
 return {
 	--- @type LazySpec
 	{
-		"snacks.nvim",
+		"folke/snacks.nvim",
 		opts = function()
 			return {
 				dashboard = {
 					preset = {
-						pick = function(cmd, opts)
-							return LazyVim.pick(cmd, opts)()
-						end,
 						header = "version: "
 							.. vim.version().major
 							.. "."
@@ -17,34 +14,37 @@ return {
 							.. vim.version().patch,
 						keys = {
 							{
-								icon = " ",
-								key = "f",
-								desc = "Find File",
-								action = ":lua Snacks.dashboard.pick('files')",
-							},
-							{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-							{
-								icon = " ",
-								key = "g",
-								desc = "Find Text",
-								action = ":lua Snacks.dashboard.pick('live_grep')",
-							},
-							{
-								icon = " ",
-								key = "r",
-								desc = "Recent Files",
-								action = ":lua Snacks.dashboard.pick('oldfiles')",
+								icon = " ",
+								key = "a",
+								desc = "New File",
+								action = ":ene | startinsert",
 							},
 							{
 								icon = " ",
 								key = "c",
 								desc = "Config",
-								action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
+								action = function()
+									Snacks.dashboard.pick("files", { cwd = vim.fn.stdpath("config") })
+								end,
 							},
-							{ icon = " ", key = "s", desc = "Restore Session", section = "session" },
-							{ icon = " ", key = "m", desc = "Mason", action = ":Mason" },
-							{ icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
-							{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
+							{
+								icon = " ",
+								key = "m",
+								desc = "Mason",
+								action = ":Mason",
+							},
+							{
+								icon = "󰒲 ",
+								key = "l",
+								desc = "Lazy",
+								action = ":Lazy",
+							},
+							{
+								icon = " ",
+								key = "q",
+								desc = "Quit",
+								action = ":qa",
+							},
 						},
 					},
 				},
@@ -65,11 +65,14 @@ return {
 				always_show_bufferline = true,
 			},
 		},
+		event = "VeryLazy",
 		cond = vim.g.vscode == nil,
 	},
 	{
 		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		},
 		priority = 1000,
 		opts = function()
 			local function is_neo_tree()
@@ -230,11 +233,13 @@ return {
 				extensions = {},
 			}
 		end,
+		event = "VeryLazy",
 		cond = vim.g.vscode == nil,
 	},
 	{
 		"petertriho/nvim-scrollbar",
 		opts = {},
+		event = "VeryLazy",
 		cond = vim.g.vscode == nil,
 	},
 	{
@@ -260,6 +265,7 @@ return {
 			post_hook = nil, -- Function to run after the scrolling animation ends
 			performance_mode = false, -- Disable 'Performance Mode' on all buffers.
 		},
+		event = "VeryLazy",
 		cond = true,
 	},
 	{
@@ -321,10 +327,53 @@ return {
 				position = "float",
 				mappings = {
 					["h"] = "close_node",
-					["l"] = "open",
+					["l"] = "open_tabnew",
 				},
 			},
 		},
+		keys = {
+			{
+				"<A-f><A-f>",
+				function()
+					local neotree_command = require("neo-tree.command")
+					local reveal_file = vim.fn.expand("%:p")
+
+					if reveal_file == "" then
+						reveal_file = vim.fn.getcwd()
+					else
+						local f = io.open(reveal_file, "r")
+						if f then
+							f.close(f)
+						else
+							reveal_file = vim.fn.getcwd()
+						end
+					end
+
+					neotree_command.execute({
+						reveal_file = reveal_file,
+						position = "float",
+						reveal_force_cwd = true,
+					})
+				end,
+				desc = "Reveal File in NeoTree",
+			},
+		},
 		cond = vim.g.vscode == nil,
+	},
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {
+			preset = "modern",
+		},
+		keys = {
+			{
+				"<leader>?",
+				function()
+					require("which-key").show({ global = false })
+				end,
+				desc = "Buffer Local Keymaps (which-key)",
+			},
+		},
 	},
 }

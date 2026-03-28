@@ -20,6 +20,7 @@ return {
 				"yamlfmt",
 			},
 		},
+		event = "VeryLazy",
 		cond = true,
 	},
 	{ "mason-org/mason-lspconfig.nvim", cond = true },

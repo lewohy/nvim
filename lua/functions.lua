@@ -8,40 +8,8 @@ function functions.open_telescope_filetypes()
 	telescope_builtin.filetypes()
 end
 
-function functions.reveal_file_in_neotree()
-	local neotree_command = require("neo-tree.command")
-	local reveal_file = vim.fn.expand("%:p")
-
-	if reveal_file == "" then
-		reveal_file = vim.fn.getcwd()
-	else
-		local f = io.open(reveal_file, "r")
-		if f then
-			f.close(f)
-		else
-			reveal_file = vim.fn.getcwd()
-		end
-	end
-
-	neotree_command.execute({
-		reveal_file = reveal_file,
-		position = "float",
-		reveal_force_cwd = true,
-	})
-end
-
-function functions.open_neogit()
-	local neogit = require("neogit")
-	neogit.open({})
-end
-
 function functions.open_todo_list()
 	vim.cmd("TodoLocList")
-end
-
-function functions.open_neogit_graph()
-	local neogit = require("neogit")
-	neogit.action("log", "log_current", { "--graph", "--decorate" })()
 end
 
 function functions.show_hover()

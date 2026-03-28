@@ -7,6 +7,10 @@ if vim.g.neovide then
 end
 
 require("config.lazy")
+require("config.autocmds")
+require("config.keymaps")
+require("config.options")
+require("config.test")
 
 -- vim.api.nvim_set_hl(0, 'NormalFloat', {
 --     bg = nil

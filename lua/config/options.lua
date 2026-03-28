@@ -27,7 +27,7 @@ vim.opt.completeopt = "menu,preview,noinsert" -- 자동완성시 메뉴와 미�
 
 vim.opt.termguicolors = true -- 24비트 색상 사용
 
-vim.opt.fileformat = "unix" --
+-- vim.opt.fileformat = "unix" --
 
 if vim.g.vscode then
 	vim.opt.shada = ""
@@ -38,4 +38,7 @@ end
 vim.api.nvim_create_user_command("Q", "q", {})
 vim.api.nvim_create_user_command("W", "w", {})
 
-vim.g.mapleader = " "
+vim.cmd.colorscheme "catppuccin" -- 테마 설정. colorscheme.lua보다 늦게 설정되어야함
+vim.opt.number = true
+vim.opt.clipboard = "unnamedplus" -- 시스템 클립보드 사용
+

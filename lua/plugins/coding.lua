@@ -2,6 +2,7 @@ return {
 	{
 		"folke/flash.nvim",
 		enabled = false,
+		event = "VeryLazy",
 	},
 	{
 		"kylechui/nvim-surround",
@@ -32,6 +33,7 @@ return {
 				decrement = "<C-x>",
 			},
 		},
+		event = "VeryLazy",
 		cond = true,
 	},
 }
