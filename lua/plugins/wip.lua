@@ -166,15 +166,53 @@ return {
 					-- opts: any options passed to the view
 					-- icon_hl_group: optional hl_group for the icon
 					-- title: set to anything or empty string to hide
-					cmdline = { pattern = "^:", icon = "", lang = "vim" },
-					search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
-					search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
-					filter = { pattern = "^:%s*!", icon = "$", lang = "bash" },
-					lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
-					help = { pattern = "^:%s*he?l?p?%s+", icon = "󰋖" },
-					input = { view = "cmdline_input", icon = "󰥻 " }, -- Used by input()
+					cmdline = {
+						pattern = "^:",
+						icon = "",
+						lang = "vim",
+					},
+					search_down = {
+						kind = "search",
+						pattern = "^/",
+						icon = " ",
+						lang = "regex",
+					},
+					search_up = {
+						kind = "search",
+						pattern = "^%?",
+						icon = " ",
+						lang = "regex",
+					},
+					filter = {
+						pattern = "^:%s*!",
+						icon = "$",
+						lang = "bash",
+					},
+					lua = {
+						pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" },
+						icon = "",
+						lang = "lua",
+					},
+					help = {
+						pattern = "^:%s*he?l?p?%s+",
+						icon = "󰋖",
+					},
+					input = {
+						view = "cmdline_input",
+						icon = "󰥻 ",
+					}, -- Used by input()
 					-- lua = false, -- to disable a format, set to `false`
 				},
+			},
+			messages = {
+				-- NOTE: If you enable messages, then the cmdline is enabled automatically.
+				-- This is a current Neovim limitation.
+				enabled = true, -- enables the Noice messages UI
+				view = "messages", -- default view for messages
+				view_error = "notify", -- view for errors
+				view_warn = "notify", -- view for warnings
+				view_history = "popup", -- view for :messages
+				view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
 			},
 			lsp = {
 				-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
@@ -232,37 +270,6 @@ return {
 			"MunifTanjim/nui.nvim",
 			"rcarriga/nvim-notify",
 		},
-		-- config = function(_, opts)
-		--     local noice = require('noice')
-		--     noice.setup(opts)
-
-		--     vim.api.nvim_create_autocmd("CmdlineLeave", {
-		--         callback = function()
-		--             if vim.fn.getcmdline():sub(1, 1) == '!' then
-		--                 local command = vim.fn.getcmdline():sub(2)
-		--                 local output = vim.fn.systemlist(command)
-
-		--                 local function strip_ansi_codes(s)
-		--                     return s:gsub("\27%[[0-9;]*m", "")
-		--                 end
-
-		--                 local function map(tbl, fn)
-		--                     local res = {}
-		--                     for i, v in ipairs(tbl) do
-		--                         res[i] = fn(v)
-		--                     end
-		--                     return res
-		--                 end
-
-		--                 functions.open_popup_command_output(map(output, strip_ansi_codes))
-		--             end
-		--         end,
-		--     })
-
-		--     vim.keymap.set('c', '<S-Enter>', function()
-		--         noice.redirect(vim.fn.getcmdline())
-		--     end, { desc = 'Redirect Cmdline' })
-		-- end,
 		cond = vim.g.vscode == nil,
 	},
 	{

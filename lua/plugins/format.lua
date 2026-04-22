@@ -37,6 +37,26 @@ return {
 				end,
 				mode = { "n", "i" },
 			},
+			{
+				"<A-F>",
+				function()
+					if vim.g.vscode then
+						local filename = vim.fn.expand("%:p")
+						local test_str = "vscode-remote://dev-container"
+						if filename:sub(1, test_str:len()) == test_str then
+							vim.notify("Using VSCode Formatter")
+
+							local vscode = require("vscode")
+							vscode.action("editor.action.formatDocument")
+							return
+						end
+					end
+
+					local conform = require("conform")
+					conform.format({ force = true })
+				end,
+				mode = { "v" },
+			},
 			-- {
 			-- 	"<leader>f",
 			-- 	function()
@@ -77,11 +97,16 @@ return {
 				dockerfile = { "dockerfmt" },
 				meson = { "mesonfmt" },
 				html = { "biome" },
+				latex = { "tex_fmt" },
 			},
 			default_format_opts = {
 				lsp_format = "fallback",
 			},
 			formatters = {
+				tex_fmt = {
+					command = "tex-fmt",
+					args = { "--stdin", "--config", "~/.config/tex-fmt.toml" },
+				},
 				typstyle = {
 					command = "typstyle",
 					args = { "--indent-width", "4" },
@@ -104,25 +129,12 @@ return {
 				biome = {
 					command = "biome",
 					args = {
-						"format",
+						"check",
+						"--write",
 						"--stdin-file-path",
-                        "$FILENAME",
+						"$FILENAME",
 					},
 				},
-				-- biome_jsonc = {
-				-- 	command = "biome",
-				-- 	args = {
-				-- 		"format",
-				-- 		"--indent-style",
-				-- 		"space",
-				-- 		"--indent-width",
-				-- 		"4",
-				-- 		"--json-formatter-trailing-commas",
-				-- 		"all",
-				-- 		"--stdin-file-path",
-				-- 		"foo.jsonc",
-				-- 	},
-				-- },
 				taplo = {
 					command = "taplo",
 					args = {

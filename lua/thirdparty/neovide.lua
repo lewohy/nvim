@@ -23,6 +23,7 @@ vim.api.nvim_create_autocmd({ "CmdlineEnter", "CmdlineLeave" }, {
 vim.g.neovide_scale_factor = 1.2
 vim.g.neovide_cursor_vfx_mode = "pixiedust"
 vim.g.neovide_cursor_vfx_particle_density = 100.0
+vim.g.neovide_theme = 'dark'
 
 vim.opt.linespace = -1
 

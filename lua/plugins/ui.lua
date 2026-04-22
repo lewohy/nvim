@@ -4,6 +4,7 @@ return {
 		"folke/snacks.nvim",
 		opts = function()
 			return {
+				--- neovim 시작화면
 				dashboard = {
 					preset = {
 						header = "version: "
@@ -24,7 +25,9 @@ return {
 								key = "c",
 								desc = "Config",
 								action = function()
-									Snacks.dashboard.pick("files", { cwd = vim.fn.stdpath("config") })
+									Snacks.dashboard.pick("files", {
+										cwd = vim.fn.stdpath("config"),
+									})
 								end,
 							},
 							{
@@ -333,7 +336,7 @@ return {
 		},
 		keys = {
 			{
-				"<A-f><A-f>",
+				"<leader>ff",
 				function()
 					local neotree_command = require("neo-tree.command")
 					local reveal_file = vim.fn.expand("%:p")

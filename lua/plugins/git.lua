@@ -9,18 +9,20 @@ return {
 		},
 		keys = {
 			{
-				"<A-f><A-g>",
+				"<leader>fg",
 				function()
 					local neogit = require("neogit")
 					neogit.open({})
 				end,
+                "Open Neogit",
 			},
 			{
-				"<A-g><A-g>",
+				"<leader>gg",
 				function()
 					local neogit = require("neogit")
 					neogit.action("log", "log_current", { "--graph", "--decorate" })()
 				end,
+                "Open Neogit graph",
 			},
 		},
 		opts = {

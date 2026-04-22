@@ -7,12 +7,7 @@ end, {
 	desc = "telescope: filetypes",
 })
 
---
-vim.keymap.set("n", "<A-f><A-e>", function() end, {
-	desc = "Focus: Editor",
-})
-
-vim.keymap.set("n", "<A-f><A-i>", function()
+vim.keymap.set("n", "<leader>fi", function()
 	functions.open_todo_list()
 end, {
 	desc = "Focus: todo",
@@ -70,3 +65,4 @@ vim.keymap.set("n", "<leader>st", function()
 end, {
 	desc = "Toggle spell",
 })
+
