@@ -17,9 +17,6 @@ vim.opt.paste = false -- 붙여넣기시 자동 들여쓰기
 
 vim.opt.history = 10000 -- 명령어 히스토리 저장 개수 설정
 
-vim.opt.undolevels = 10000 -- undo 레벨 설정
-vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir" -- undo dir설정
-vim.opt.undofile = true -- undofile 활성화
 
 vim.opt.scrolloff = 100 -- 스크롤 오프셋 설정
 
@@ -39,9 +36,25 @@ end
 
 vim.api.nvim_create_user_command("Q", "q", {})
 vim.api.nvim_create_user_command("W", "w", {})
+vim.api.nvim_create_user_command("WQ", "wq", {})
+vim.api.nvim_create_user_command("Wq", "wq", {})
 
-vim.cmd.colorscheme "catppuccin-mocha" -- 테마 설정. colorscheme.lua보다 늦게 설정되어야함
 vim.opt.number = true
 vim.opt.clipboard = "unnamedplus" -- 시스템 클립보드 사용
 
 -- vim.opt.wildmode = "longest:full,full"
+
+local data_dir = vim.fn.stdpath("data")
+
+-- 백업, 스왑, 언두 파일 경로를 로컬로 강제
+vim.opt.backupdir = data_dir .. "/backup//"
+vim.opt.directory = data_dir .. "/swap//"
+
+-- 해당 디렉토리가 없으면 자동 생성하도록 쉘 명령어 실행
+vim.fn.mkdir(data_dir .. "/backup", "p")
+vim.fn.mkdir(data_dir .. "/swap", "p")
+
+vim.opt.undolevels = 10000 -- undo 레벨 설정
+vim.opt.undofile = true -- undofile 활성화
+vim.opt.undodir   = data_dir .. "/undo//"
+vim.fn.mkdir(data_dir .. "/undo", "p")

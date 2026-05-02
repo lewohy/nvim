@@ -25,8 +25,13 @@ return {
 								key = "c",
 								desc = "Config",
 								action = function()
-									Snacks.dashboard.pick("files", {
-										cwd = vim.fn.stdpath("config"),
+									local config_path = vim.fn.stdpath("config")
+									vim.cmd.cd(config_path)
+
+									require("neo-tree.command").execute({
+										reveal_file = config_path,
+										position = "float",
+										reveal_force_cwd = true,
 									})
 								end,
 							},
@@ -41,12 +46,6 @@ return {
 								key = "l",
 								desc = "Lazy",
 								action = ":Lazy",
-							},
-							{
-								icon = " ",
-								key = "q",
-								desc = "Quit",
-								action = ":qa",
 							},
 						},
 					},
@@ -338,7 +337,6 @@ return {
 			{
 				"<leader>ff",
 				function()
-					local neotree_command = require("neo-tree.command")
 					local reveal_file = vim.fn.expand("%:p")
 
 					if reveal_file == "" then
@@ -352,7 +350,7 @@ return {
 						end
 					end
 
-					neotree_command.execute({
+					require("neo-tree.command").execute({
 						reveal_file = reveal_file,
 						position = "float",
 						reveal_force_cwd = true,
@@ -378,5 +376,8 @@ return {
 				desc = "Buffer Local Keymaps (which-key)",
 			},
 		},
+	},
+	{
+		"sevenc-nanashi/neov-ime.nvim",
 	},
 }

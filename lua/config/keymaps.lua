@@ -29,12 +29,6 @@ vim.keymap.set("v", "J", "j", {
 	silent = true,
 })
 
-if vim.g.vscode == nil then
-	vim.keymap.set("i", "<C-SPACE>", "<C-X><C-O>", {
-		desc = "Test",
-	})
-end
-
 vim.keymap.set("c", "<S-Enter>", function()
 	functions.noice_redirect_cmd()
 end, { desc = "Redirect Cmdline" })
@@ -65,4 +59,3 @@ vim.keymap.set("n", "<leader>st", function()
 end, {
 	desc = "Toggle spell",
 })
-

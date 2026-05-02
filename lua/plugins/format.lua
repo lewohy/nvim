@@ -1,3 +1,14 @@
+---@class (exact) AAA
+---@field a string
+
+---@type AAA
+local aaa = {
+	a = "hello",
+	totally_fake_field_xyz = 123,
+}
+
+aaa.asd = "asd"
+
 local function create_clang_format_config()
 	if vim.fn.filereadable(".clang-format") == 1 then
 		return {
@@ -33,7 +44,9 @@ return {
 					end
 
 					local conform = require("conform")
-					conform.format({ force = true })
+					conform.format({
+						force = true,
+					})
 				end,
 				mode = { "n", "i" },
 			},
@@ -66,6 +79,7 @@ return {
 			-- 	desc = "Format Injected Langs",
 			-- },
 		},
+		---@type conform.setupOpts
 		opts = {
 			format_on_save = nil,
 			lang_to_ext = {
