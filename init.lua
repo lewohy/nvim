@@ -1,3 +1,9 @@
+require("config.lazy")
+require("config.autocmds")
+require("config.keymaps")
+require("config.options")
+require("config.test")
+
 if vim.g.vscode then
 	require("thirdparty.vscode-neovim.init")
 end
@@ -5,12 +11,6 @@ end
 if vim.g.neovide then
 	require("thirdparty.neovide")
 end
-
-require("config.lazy")
-require("config.autocmds")
-require("config.keymaps")
-require("config.options")
-require("config.test")
 
 -- vim.api.nvim_set_hl(0, 'NormalFloat', {
 --     bg = nil
@@ -34,6 +34,6 @@ end
 vim.filetype.add({
 	pattern = {
 		[".*/%.vscode/.+.json"] = "jsonc",
-		-- ["devcontainer.json"] = "json",
+		["devcontainer.json"] = "jsonc",
 	},
 })

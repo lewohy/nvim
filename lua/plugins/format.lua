@@ -1,29 +1,3 @@
----@class (exact) AAA
----@field a string
-
----@type AAA
-local aaa = {
-	a = "hello",
-	totally_fake_field_xyz = 123,
-}
-
-aaa.asd = "asd"
-
-local function create_clang_format_config()
-	if vim.fn.filereadable(".clang-format") == 1 then
-		return {
-			command = "clang-format",
-		}
-	end
-
-	return {
-		command = "clang-format",
-		args = {
-			"--style=file:/home/lewohy/.config/clang-format/.clang-format",
-		},
-	}
-end
-
 return {
 	{
 		"stevearc/conform.nvim",
@@ -66,7 +40,19 @@ return {
 					end
 
 					local conform = require("conform")
-					conform.format({ force = true })
+					local start_line = vim.fn.line("v")
+					local end_line = vim.fn.line(".")
+					if start_line > end_line then
+						start_line, end_line = end_line, start_line
+					end
+
+					conform.format({
+						force = true,
+						range = {
+							start = { start_line, 0 },
+							["end"] = { end_line, vim.fn.col({ end_line, "$" }) },
+						},
+					})
 				end,
 				mode = { "v" },
 			},
@@ -112,6 +98,9 @@ return {
 				meson = { "mesonfmt" },
 				html = { "biome" },
 				latex = { "tex_fmt" },
+				ps1 = { "psscriptanalyzer" },
+				qml = { "qmlformat" },
+				cmake = { "cmake_format" },
 			},
 			default_format_opts = {
 				lsp_format = "fallback",
@@ -156,7 +145,49 @@ return {
 						"-",
 					},
 				},
-				clang_format = create_clang_format_config(),
+				clang_format = {
+					args = function(_, _)
+                        -- vscode-neovim 대응해서 현재 열린 파일 위치를 vim api로 가져옴
+						local dirname = vim.fs.dirname(vim.fn.expand("%:p"))
+
+						local found = vim.fs.find({ ".clang-format", "_clang-format" }, {
+							path = dirname,
+							upward = true,
+						})[1]
+
+						-- 프로젝트에 설정이 있으면 clang-format 기본 동작에 맡김
+						if found then
+							return { "-assume-filename", "$FILENAME" }
+						end
+
+						-- 없으면 XDG 전역 설정을 명시적으로 지정
+						local xdg = vim.env.XDG_CONFIG_HOME or (vim.env.HOME .. "/.config")
+						local global = xdg .. "/clang-format/.clang-format"
+						return { "-assume-filename", "$FILENAME", "--style=file:" .. global }
+					end,
+				},
+				psscriptanalyzer = {
+					command = "pwsh",
+					args = {
+						"-NoProfile",
+						"-Command",
+						"Invoke-Formatter -ScriptDefinition ([Console]::In.ReadToEnd())",
+					},
+					stdin = true,
+				},
+				qmlformat = {
+					command = "qmlformat",
+					args = {
+						"-i",
+						"$FILENAME",
+					},
+					stdin = false,
+					tmpfile_format = ".conform.$RANDOM.qml",
+				},
+				cmake_format = {
+					command = "cmake-format",
+					args = { "-" },
+				},
 			},
 		},
 		event = "VeryLazy",
